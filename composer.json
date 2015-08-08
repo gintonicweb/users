@@ -1,0 +1,36 @@
+{
+    "name": "gintonicweb/users",
+    "description": "Users accounts",
+    "type": "cakephp-plugin",
+    "homepage": "http://gintoniccms.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Philippe Lafrance",
+            "homepage": "http://phillafrance.com",
+            "role": "Author"
+        },
+        {
+            "name": "GintonicWeb Contributors",
+            "homepage": "http://github.com/gintonicweb/users/graphs/contributors"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/gintonicweb/payments/issues",
+        "source": "https://github.com/gintonicweb/payments"
+    },
+    "require": {
+        "stripe/stripe-php": "3.*",
+        "cakephp/cakephp": "~3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Payments\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Payments\\Test\\": "tests"
+        }
+    }
+}
