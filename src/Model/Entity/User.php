@@ -13,7 +13,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace GintonicCMS\Model\Entity;
+namespace Users\Model\Entity;
 
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Core\Configure;

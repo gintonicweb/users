@@ -13,7 +13,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace GintonicCMS\Controller;
+namespace Users\Controller;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;

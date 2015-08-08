@@ -12,7 +12,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace GintonicCMS\Model\Table;
+namespace Users\Model\Table;
 
 use Cake\ORM\Query;
 use Cake\ORM\ResultSet;
