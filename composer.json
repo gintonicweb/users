@@ -16,8 +16,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/gintonicweb/payments/issues",
-        "source": "https://github.com/gintonicweb/payments"
+        "issues": "https://github.com/gintonicweb/users/issues",
+        "source": "https://github.com/gintonicweb/users"
     },
     "require": {
         "stripe/stripe-php": "3.*",
@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Payments\\": "src"
+            "Users\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Payments\\Test\\": "tests"
+            "Users\\Test\\": "tests"
         }
     }
 }
