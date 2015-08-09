@@ -1,12 +1,12 @@
 <?php
-namespace GintonicCMS\Test\TestCase\Model\Table;
+namespace Users\Test\TestCase\Model\Table;
 
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use GintonicCMS\Model\Table\UsersTable;
+use Users\Model\Table\UsersTable;
 
 /**
- * GintonicCMS\Model\Table\UsersTable Test Case
+ * Users\Model\Table\UsersTable Test Case
  */
 class UsersTableTest extends TestCase
 {
@@ -17,7 +17,7 @@ class UsersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.gintonic_c_m_s.users',
+        'plugin.users.users',
     ];
 
     /**
@@ -28,7 +28,7 @@ class UsersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Users') ? [] : ['className' => 'GintonicCMS\Model\Table\UsersTable'];
+        $config = TableRegistry::exists('Users') ? [] : ['className' => 'Users\Model\Table\UsersTable'];
         $this->Users = TableRegistry::get('Users', $config);
     }
 

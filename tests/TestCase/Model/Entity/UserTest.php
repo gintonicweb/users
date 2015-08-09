@@ -1,13 +1,13 @@
 <?php
 
-namespace GintonicCMS\Test\TestCase\Model\Entity;
+namespace Users\Test\TestCase\Model\Entity;
 
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
-use GintonicCMS\Model\Entity\User;
+use Users\Model\Entity\User;
 
 /**
- * GintonicCMS\Model\Entity\User Test Case
+ * Users\Model\Entity\User Test Case
  */
 class UserTest extends TestCase
 {
@@ -58,21 +58,6 @@ class UserTest extends TestCase
     public function testSendRecovery()
     {
         $this->markTestIncomplete('Not implemented yet.');
-//        $entity = new User([
-//            'id' => 1,
-//            'email' => 'hitesh@securemetasys.com',
-//            'token' => 'jhfkjd456d4sgdsg'
-//        ]);
-////        debug($entity->sendRecovery());
-//        $email = $this->getMock('Cake\Network\Email\Email', ['profile']);
-//        $email->expects($this->once())
-//            ->method('profile')
-//            ->with('GintonicCMS.default');
-//        
-//        $entity->Email = $email;
-//        $entity->sendRecovery();
-//        exit;
-        
     }
 
     /**

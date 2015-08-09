@@ -1,11 +1,11 @@
 <?php
-namespace GintonicCMS\Test\TestCase\Controller\Admin;
+namespace Users\Test\TestCase\Controller\Admin;
 
 use Cake\TestSuite\IntegrationTestCase;
-use GintonicCMS\Controller\Admin\UsersController;
+use Users\Controller\Admin\UsersController;
 
 /**
- * GintonicCMS\Controller\Admin\UsersController Test Case
+ * Users\Controller\Admin\UsersController Test Case
  */
 class UsersControllerTest extends IntegrationTestCase
 {
@@ -16,7 +16,7 @@ class UsersControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.gintonic_c_m_s.users'
+        'plugin.users.users'
     ];
 
     /**

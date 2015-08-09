@@ -1,12 +1,12 @@
 <?php
-namespace GintonicCMS\Test\TestCase\Controller;
+namespace Users\Test\TestCase\Controller;
 
 use Cake\Controller\ComponentRegistry;
 use Cake\TestSuite\IntegrationTestCase;
-use GintonicCMS\Controller\UsersController;
+use Users\Controller\UsersController;
 
 /**
- * GintonicCMS\Controller\UsersController Test Case
+ * Users\Controller\UsersController Test Case
  */
 class UsersControllerTest extends IntegrationTestCase
 {
@@ -16,10 +16,10 @@ class UsersControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.gintonic_c_m_s.users',
-        'plugin.gintonic_c_m_s.acos',
-        'plugin.gintonic_c_m_s.aros',
-        'plugin.gintonic_c_m_s.aros_acos'
+        'plugin.users.users',
+        'plugin.users.acos',
+        'plugin.users.aros',
+        'plugin.users.aros_acos'
     ];
 
     /**
@@ -149,7 +149,7 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertRedirect([
             'controller' => 'Users',
             'action' => 'view',
-            'plugin' => 'GintonicCMS'
+            'plugin' => 'Users'
         ]);
 
         $this->get('/users/signout');
@@ -202,7 +202,7 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertRedirect([
             'controller' => 'Users',
             'action' => 'view',
-            'plugin' => 'GintonicCMS'
+            'plugin' => 'Users'
         ]);
     }
 
@@ -283,7 +283,7 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertRedirect([
             'controller' => 'Users',
             'action' => 'sendRecovery',
-            'plugin' => 'GintonicCMS'
+            'plugin' => 'Users'
         ]);
 
         // Reset should be possible with correct token
