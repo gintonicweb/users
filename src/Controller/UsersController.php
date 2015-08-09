@@ -100,7 +100,7 @@ class UsersController extends AppController
             }
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
-                $this->Flash->set(__('Account updated successfully');
+                $this->Flash->set(__('Account updated successfully'));
                 return $this->redirect($this->Auth->redirectUrl());
             }
             $this->Flash->set(__('Error updating the account'));

@@ -87,7 +87,7 @@ class UsersController extends AppController
             $this->Flash->set(__('Users deleted'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Flash->set(__('Error deleting user')]);
+        $this->Flash->set(__('Error deleting user'));
         return $this->redirect(['action' => 'index']);
     }
 }
