@@ -1,22 +1,7 @@
 <?php
-/**
- * GintonicCMS : Full Stack Content Management System (http://gintoniccms.com)
- * Copyright (c) Philippe Lafrance (http://phillafrance.com)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Philippe Lafrance (http://phillafrance.com)
- * @link          http://gintoniccms.com GintonicCMS Project
- * @since         0.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-
 namespace Users\Model\Entity;
 
 use Cake\Auth\DefaultPasswordHasher;
-use Cake\Core\Configure;
 use Cake\I18n\Time;
 use Cake\Network\Email\Email;
 use Cake\ORM\Entity;
@@ -33,9 +18,10 @@ class User extends Entity
      * @var array
      */
     protected $_accessible = [
+        '*' => true,
+        'id' => false,
         'password' => false,
         'token' => false,
-        '*' => true
     ];
     protected $_virtual = ['full_name'];
     protected $_hidden = ['password'];

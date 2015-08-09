@@ -1,31 +1,13 @@
 {
-    "name": "gintonicweb/users",
-    "description": "Users accounts",
+    "name": "your-name-here/Users",
+    "description": "Users plugin for CakePHP",
     "type": "cakephp-plugin",
-    "homepage": "http://gintoniccms.com",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Philippe Lafrance",
-            "homepage": "http://phillafrance.com",
-            "role": "Author"
-        },
-        {
-            "name": "GintonicWeb Contributors",
-            "homepage": "http://github.com/gintonicweb/users/graphs/contributors"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/gintonicweb/users/issues",
-        "source": "https://github.com/gintonicweb/users"
-    },
     "require": {
-        "stripe/stripe-php": "3.*",
+        "php": ">=5.4.16",
         "cakephp/cakephp": "~3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "cakephp/cakephp-codesniffer": "2.*"
+        "phpunit/phpunit": "*"
     },
     "autoload": {
         "psr-4": {
@@ -34,7 +16,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Users\\Test\\": "tests"
+            "Users\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     }
 }

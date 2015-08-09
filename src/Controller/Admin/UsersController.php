@@ -5,22 +5,25 @@ use App\Controller\Admin\AppController;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
+/**
+ * Users Controller
+ *
+ * Handle the mechanics of logging users in, password management and
+ * authentication. This base class is intended to stay as lean as possible while
+ * being easily reusable from any application.
+ */
 class UsersController extends AppController
 {
-    public $paginate = [
-        'limit' => 25,
-        'order' => [
-            'Users.created' => 'desc'
-        ]
-    ];
-
     /**
-     * TODO: blockquote
+     * Setting up the cookie
+     *
+     * @return void
      */
     public function initialize()
     {
         parent::initialize();
-        $this->loadComponent('Paginator');
+        $this->Cookie->config('path', '/');
+        $this->Cookie->config(['httpOnly' => true]);
     }
 
     /**
@@ -38,43 +41,18 @@ class UsersController extends AppController
     /**
      * TODO: blockquote
      */
-    public function permissions()
-    {
-        $aros = TableRegistry::get('Aros');
-        $roles = $aros->find()
-            ->where(['alias IS NOT' => null])
-            ->find('threaded')
-            ->toArray();
-
-        $acos = TableRegistry::get('Acos');
-        $permissions = $acos->find()
-            ->where(['alias IS NOT' => null])
-            ->find('threaded')
-            ->toArray();
-        $this->set(compact('roles', 'permissions'));
-    }
-
-    /**
-     * TODO: blockquote
-     */
     public function add()
     {
         if ($this->request->is('post')) {
             $user = $this->Users->newEntity($this->request->data);
             if ($this->Users->save($user)) {
-                $this->Flash->set(__('The user has been saved successfully.'), [
-                    'element' => 'GintonicCMS.alert',
-                    'params' => ['class' => 'alert-success']
-                ]);
+                $this->Flash->set(__('The user has been saved successfully.'));
                 return $this->redirect([
                     'controller' => 'users',
                     'action' => 'index'
                 ]);
             }
-            $this->Flash->set(__('Unable to add user.'), [
-                'element' => 'GintonicCMS.alert',
-                'params' => ['class' => 'alert-danger']
-            ]);
+            $this->Flash->set(__('Unable to add user.'));
             $this->set('user', $user);
         }
     }
@@ -91,16 +69,10 @@ class UsersController extends AppController
             }
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
-                $this->Flash->set(__('Account updated successfully'), [
-                    'element' => 'GintonicCMS.alert',
-                    'params' => ['class' => 'alert-success']
-                ]);
+                $this->Flash->set(__('Account updated successfully'));
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->set(__('Error updating the account'), [
-                'element' => 'GintonicCMS.alert',
-                'params' => ['class' => 'alert-danger']
-            ]);
+            $this->Flash->set(__('Error updating the account'));
         }
         $this->set(compact('user'));
     }
@@ -112,16 +84,10 @@ class UsersController extends AppController
     {
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
-            $this->Flash->set(__('Users deleted'), [
-                'element' => 'GintonicCMS.alert',
-                'params' => ['class' => 'alert-success']
-            ]);
+            $this->Flash->set(__('Users deleted'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Flash->set(__('Error deleting user'), [
-            'element' => 'GintonicCMS.alert',
-            'params' => ['class' => 'alert-danger']
-        ]);
+        $this->Flash->set(__('Error deleting user')]);
         return $this->redirect(['action' => 'index']);
     }
 }

@@ -1,28 +1,13 @@
 <?php
-/**
- * GintonicCMS : Full Stack Content Management System (http://gintoniccms.com)
- * Copyright (c) Philippe Lafrance (http://phillafrance.com)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Philippe Lafrance (http://phillafrance.com)
- * @link          http://gintoniccms.com GintonicCMS Project
- * @since         0.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-
 namespace Users\Controller;
 
 use App\Controller\AppController;
-use Cake\Core\Configure;
 use Cake\Event\Event;
 
 /**
  * Users Controller
  *
- * Meant to handle the mechanics of logging users in, password management and
+ * Handle the mechanics of logging users in, password management and
  * authentication. This base class is intended to stay as lean as possible while
  * being easily reusable from any application.
  */
@@ -83,10 +68,11 @@ class UsersController extends AppController
     }
 
     /**
-     * View users information (name and password). If no user is specified,
-     * show own profile.
+     * View method
      *
-     * @param int $id the id of the user we want to consult
+     * @param string|null $id User id.
+     * @return void
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function view($id = null)
     {
@@ -98,10 +84,10 @@ class UsersController extends AppController
     }
 
     /**
-     * Allows users to edit their own information. The password is only updated
-     * if it is changed from the default value, in this case: 'dummy'.
+     * Edit method
      *
-     * @return void
+     * @return void Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit()
     {
@@ -114,16 +100,10 @@ class UsersController extends AppController
             }
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
-                $this->Flash->set(__('Account updated successfully'), [
-                    'element' => 'GintonicCMS.alert',
-                    'params' => ['class' => 'alert-success']
-                ]);
+                $this->Flash->set(__('Account updated successfully');
                 return $this->redirect($this->Auth->redirectUrl());
             }
-            $this->Flash->set(__('Error updating the account'), [
-                'element' => 'GintonicCMS.alert',
-                'params' => ['class' => 'alert-danger']
-            ]);
+            $this->Flash->set(__('Error updating the account'));
         }
         $this->set(compact('user'));
     }
@@ -139,18 +119,12 @@ class UsersController extends AppController
             $user->updateToken();
             if ($this->Users->save($user)) {
                 $user->sendSignup();
-                $this->Flash->set(__('Please check your e-mail to validate your account'), [
-                    'element' => 'GintonicCMS.alert',
-                    'params' => ['class' => 'alert-info']
-                ]);
+                $this->Flash->set(__('Please check your e-mail to validate your account'));
                 $this->Auth->setUser($user->toArray());
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
                 $this->loadComponent('GintonicCMS.Errors');
-                $this->Flash->set($this->Errors->toList($user), [
-                    'element' => 'GintonicCMS.alert',
-                    'params' => ['class' => 'alert-danger']
-                ]);
+                $this->Flash->set($this->Errors->toList($user));
                 return;
             }
         }
@@ -169,17 +143,11 @@ class UsersController extends AppController
                     $this->Cookie->write('User', $user);
                 }
                 if (!$user['verified']) {
-                    $this->Flash->set(__('Login successful. Please validate your email address.'), [
-                        'element' => 'GintonicCMS.alert',
-                        'params' => ['class' => 'alert-warning']
-                    ]);
+                    $this->Flash->set(__('Login successful. Please validate your email address.'));
                 }
                 return $this->redirect($this->Auth->redirectUrl());
             }
-            $this->Flash->set(__('Your username or password is incorrect.'), [
-                'element' => 'GintonicCMS.alert',
-                'params' => ['class' => 'alert-danger']
-            ]);
+            $this->Flash->set(__('Your username or password is incorrect.'));
         }
     }
 
@@ -189,10 +157,7 @@ class UsersController extends AppController
     public function signout()
     {
         $this->request->session()->destroy();
-        $this->Flash->set(__('You are now signed out.'), [
-            'element' => 'GintonicCMS.alert',
-            'params' => ['class' => 'alert-info']
-        ]);
+        $this->Flash->set(__('You are now signed out.'));
         $this->Cookie->delete('User');
         return $this->redirect($this->Auth->logout());
     }
@@ -210,15 +175,9 @@ class UsersController extends AppController
 
         if ($user->verified || $user->verify($token)) {
             $this->Users->save($user);
-            $this->Flash->set(__('Email address validated successfuly'), [
-                'element' => 'GintonicCMS.alert',
-                'params' => ['class' => 'alert-success']
-            ]);
+            $this->Flash->set(__('Email address validated successfuly'));
         } else {
-            $this->Flash->set(__('Error while validating email'), [
-                'element' => 'GintonicCMS.alert',
-                'params' => ['class' => 'alert-danger']
-            ]);
+            $this->Flash->set(__('Error while validating email'));
         }
         return $this->redirect($this->Auth->redirectUrl());
     }
@@ -234,10 +193,7 @@ class UsersController extends AppController
     {
         $user = $this->Users->get($id)->accessible('password', true);
         if (!$user->verify($token)) {
-            $this->Flash->set(__('Recovery token has expired'), [
-                'element' => 'GintonicCMS.alert',
-                'params' => ['class' => 'alert-danger']
-            ]);
+            $this->Flash->set(__('Recovery token has expired'));
             return $this->redirect([
                 'controller' => 'Users',
                 'action' => 'sendRecovery',
@@ -248,16 +204,10 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Auth->setUser($user->toArray());
-                $this->Flash->set(__('Password has been updated successfully.'), [
-                    'element' => 'GintonicCMS.alert',
-                    'params' => ['class' => 'alert-success']
-                ]);
+                $this->Flash->set(__('Password has been updated successfully.'));
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
-                $this->Flash->set(__('Error while resetting password'), [
-                    'element' => 'GintonicCMS.alert',
-                    'params' => ['class' => 'alert-danger']
-                ]);
+                $this->Flash->set(__('Error while resetting password'));
             }
         }
         $this->set(compact('id', 'token'));
@@ -273,10 +223,7 @@ class UsersController extends AppController
         $user = $this->Users->get($userId);
 
         if ($user->sendVerification()) {
-            $this->Flash->set(__('The email was resent. Please check your inbox.'), [
-                'element' => 'GintonicCMS.alert',
-                'params' => ['class' => 'alert-success']
-            ]);
+            $this->Flash->set(__('The email was resent. Please check your inbox.'));
             return $this->redirect($this->Auth->redirectUrl());
         }
     }
@@ -291,20 +238,14 @@ class UsersController extends AppController
             $user = $this->Users->findByEmail($this->request->data['email'])->first();
 
             if (empty($user)) {
-                $this->Flash->set(__('No matching email address found.'), [
-                    'element' => 'GintonicCMS.alert',
-                    'params' => ['class' => 'alert-danger']
-                ]);
+                $this->Flash->set(__('No matching email address found.'));
             } else {
                 // TODO: write a test that vaidates that the token is updated
                 // careful: this is a guarded field
                 $user->updateToken();
                 if ($this->Users->save($user)) {
                     $user->sendRecovery();
-                    $this->Flash->set(__('An email was sent with password recovery instructions.'), [
-                        'element' => 'GintonicCMS.alert',
-                        'params' => ['class' => 'alert-success']
-                    ]);
+                    $this->Flash->set(__('An email was sent with password recovery instructions.'));
                     return $this->redirect($this->Auth->redirectUrl());
                 }
             }

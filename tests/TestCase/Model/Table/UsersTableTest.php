@@ -17,7 +17,7 @@ class UsersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.users.users',
+        'plugin.users.users'
     ];
 
     /**
@@ -45,16 +45,6 @@ class UsersTableTest extends TestCase
     }
 
     /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Test initialize method
      *
      * @return void
@@ -65,31 +55,21 @@ class UsersTableTest extends TestCase
     }
 
     /**
-     * Test findAvatar method
+     * Test validationDefault method
      *
      * @return void
      */
-    public function testFindAvatar()
+    public function testValidationDefault()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test findProfile method
+     * Test buildRules method
      *
      * @return void
      */
-    public function testFindProfile()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test changePassword method
-     *
-     * @return void
-     */
-    public function testChangePassword()
+    public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
