@@ -31,10 +31,6 @@ class UsersTable extends Table
         $this->displayField('email');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
-        $this->hasMany('Acl.Aros', [
-            'conditions' => ['Aros.model' => 'Users'],
-            'foreignKey' => 'foreign_key'
-        ]);
     }
 
     /**
@@ -65,20 +61,6 @@ class UsersTable extends Table
         $validator
             ->requirePresence('last', 'create')
             ->notEmpty('last');
-
-        $validator
-            ->add('verified', 'valid', ['rule' => 'boolean'])
-            ->requirePresence('verified', 'create')
-            ->notEmpty('verified');
-
-        $validator
-            ->requirePresence('token', 'create')
-            ->notEmpty('token');
-
-        $validator
-            ->add('token_creation', 'valid', ['rule' => 'datetime'])
-            ->requirePresence('token_creation', 'create')
-            ->notEmpty('token_creation');
 
         return $validator;
     }

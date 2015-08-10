@@ -2,6 +2,7 @@
 namespace Users\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 use Cake\Event\Event;
 
 /**
@@ -21,6 +22,8 @@ class UsersController extends AppController
     public function initialize()
     {
         parent::initialize();
+        $this->loadComponent('Cookie');
+        $this->loadComponent('Auth');
         $this->Cookie->config('path', '/');
         $this->Cookie->config(['httpOnly' => true]);
     }
@@ -42,12 +45,6 @@ class UsersController extends AppController
         $unAuth = in_array($this->request->params['action'], $unAuthActions);
         if ($this->Auth->user() && $unAuth) {
             return $this->redirect($this->Auth->redirectUrl());
-        }
-
-        // Use bare layout for those actions
-        $bareActions = ['signin', 'signup', 'recover', 'sendRecovery'];
-        if (in_array($this->request->params['action'], $bareActions)) {
-            $this->layout = 'bare';
         }
 
         parent::beforeFilter($event);
@@ -118,13 +115,11 @@ class UsersController extends AppController
             $this->Users->patchEntity($user, $this->request->data);
             $user->updateToken();
             if ($this->Users->save($user)) {
-                $user->sendSignup();
                 $this->Flash->set(__('Please check your e-mail to validate your account'));
                 $this->Auth->setUser($user->toArray());
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
-                $this->loadComponent('GintonicCMS.Errors');
-                $this->Flash->set($this->Errors->toList($user));
+                $this->Flash->error(__('An error occured while creating the account'));
                 return;
             }
         }
@@ -221,11 +216,6 @@ class UsersController extends AppController
     {
         $userId = $this->request->session()->read('Auth.User.id');
         $user = $this->Users->get($userId);
-
-        if ($user->sendVerification()) {
-            $this->Flash->set(__('The email was resent. Please check your inbox.'));
-            return $this->redirect($this->Auth->redirectUrl());
-        }
     }
 
     /**
@@ -244,7 +234,6 @@ class UsersController extends AppController
                 // careful: this is a guarded field
                 $user->updateToken();
                 if ($this->Users->save($user)) {
-                    $user->sendRecovery();
                     $this->Flash->set(__('An email was sent with password recovery instructions.'));
                     return $this->redirect($this->Auth->redirectUrl());
                 }

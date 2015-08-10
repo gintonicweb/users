@@ -3,8 +3,6 @@
     <ul class="side-nav">
         <li><?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->id]) ?> </li>
         <li><?= $this->Form->postLink(__('Delete User'), ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['action' => 'add']) ?> </li>
     </ul>
 </div>
 <div class="users view large-10 medium-9 columns">
@@ -13,22 +11,16 @@
         <div class="large-5 columns strings">
             <h6 class="subheader"><?= __('Email') ?></h6>
             <p><?= h($user->email) ?></p>
-            <h6 class="subheader"><?= __('Password') ?></h6>
-            <p><?= h($user->password) ?></p>
             <h6 class="subheader"><?= __('First') ?></h6>
             <p><?= h($user->first) ?></p>
             <h6 class="subheader"><?= __('Last') ?></h6>
             <p><?= h($user->last) ?></p>
-            <h6 class="subheader"><?= __('Token') ?></h6>
-            <p><?= h($user->token) ?></p>
         </div>
         <div class="large-2 columns numbers end">
             <h6 class="subheader"><?= __('Id') ?></h6>
             <p><?= $this->Number->format($user->id) ?></p>
         </div>
         <div class="large-2 columns dates end">
-            <h6 class="subheader"><?= __('Token Creation') ?></h6>
-            <p><?= h($user->token_creation) ?></p>
             <h6 class="subheader"><?= __('Created') ?></h6>
             <p><?= h($user->created) ?></p>
             <h6 class="subheader"><?= __('Modified') ?></h6>

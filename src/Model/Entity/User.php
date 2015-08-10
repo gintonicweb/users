@@ -18,13 +18,11 @@ class User extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false,
-        'password' => false,
+        'verified' => false,
         'token' => false,
     ];
     protected $_virtual = ['full_name'];
-    protected $_hidden = ['password'];
+    protected $_hidden = ['password', 'token', 'token_creation'];
 
     /**
      * Take plaintext password and return valid Hash of that password.
@@ -49,72 +47,6 @@ class User extends Entity
             return $this->_properties['first'] . ' ' . $this->_properties['last'];
         }
         return false;
-    }
-    /**
-     * Send Recovery Email to given email id.
-     * For Example:
-     * $user = $this->Users->get($id);
-     * $user->sendRecovery();
-     *
-     * @return boolean True if email is send else False.
-     */
-    public function sendRecovery()
-    {
-        $email = new Email('default');
-        $email->viewVars([
-            'userId' => $this->id,
-            'token' => $this->token
-        ]);
-        $email->template('GintonicCMS.recovery')
-            ->emailFormat('html')
-            ->to($this->email)
-            ->subject('Forgot Password');
-        return $email->send();
-    }
-
-    /**
-     * Send Signup Email to given email id.
-     * For Example:
-     * $user = $this->Users->get($id);
-     * $user->sendSignup();
-     *
-     * @return boolean True if email is send
-     */
-    public function sendSignup()
-    {
-        $email = new Email('default');
-        $email->viewVars([
-            'userId' => $this->id,
-            'token' => $this->token
-        ]);
-        $email->template('GintonicCMS.signup')
-            ->emailFormat('html')
-            ->to($this->email)
-            ->subject('Account validation');
-        return $email->send();
-    }
-
-    /**
-     * Send Verification Email to given email id after successfull Signup of user.
-     * For Example:
-     * $user = $this->Users->get($id);
-     * $user->sendVerification();
-     *
-     * @return boolean True if email is send else False.
-     */
-    public function sendVerification()
-    {
-        $email = new Email('default');
-        $email->viewVars([
-            'userId' => $this->id,
-            'token' => $this->token,
-            'userName' => $this->full_name
-        ]);
-        $email->template('GintonicCMS.verification')
-            ->emailFormat('html')
-            ->to($this->email)
-            ->subject('Account validation');
-        return $email->send();
     }
 
     /**

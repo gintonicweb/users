@@ -7,7 +7,7 @@
                 ['confirm' => __('Are you sure you want to delete # {0}?', $user->id)]
             )
         ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('View User'), ['action' => 'view']) ?></li>
     </ul>
 </div>
 <div class="users form large-10 medium-9 columns">
@@ -19,9 +19,6 @@
             echo $this->Form->input('password');
             echo $this->Form->input('first');
             echo $this->Form->input('last');
-            echo $this->Form->input('verified');
-            echo $this->Form->input('token');
-            echo $this->Form->input('token_creation');
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>
