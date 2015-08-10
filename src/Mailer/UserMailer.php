@@ -6,6 +6,12 @@ use Cake\Mailer\Mailer;
 
 class UserMailer extends Mailer
 {
+    /**
+     * Email meant to invite user to register their email address upon 
+     * registration
+     *
+     * @param User $user The entity object of the targeted user
+     */
     public function signup($user)
     {
         $this->_email
@@ -22,6 +28,13 @@ class UserMailer extends Mailer
         ]);
     }
 
+    /**
+     * If a user haven't registered his email address, a notification will
+     * inform him that he needs to do it. If he has lost the confirmation
+     * email, he can request a new one with this.
+     *
+     * @param User $user The entity object of the targeted user
+     */
     public function verification($user)
     {
         $this->_email
@@ -38,6 +51,11 @@ class UserMailer extends Mailer
         ]);
     }
 
+    /**
+     * This is the email message that is sent upon the password recovery procedure
+     *
+     * @param User $user The entity object of the targeted user
+     */
     public function recovery($user)
     {
         $this->_email
