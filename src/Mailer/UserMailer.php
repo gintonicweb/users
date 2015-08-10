@@ -7,7 +7,7 @@ use Cake\Mailer\Mailer;
 class UserMailer extends Mailer
 {
     /**
-     * Email meant to invite user to register their email address upon 
+     * Email meant to invite user to register their email address upon
      * registration
      *
      * @param User $user The entity object of the targeted user

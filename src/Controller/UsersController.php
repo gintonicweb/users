@@ -47,8 +47,7 @@ class UsersController extends AppController
         $unAuthActions = ['signin', 'signup', 'recover'];
         $unAuth = in_array($this->request->params['action'], $unAuthActions);
         if ($this->Auth->user() && $unAuth) {
-            $this->redirect($this->Auth->redirectUrl());
-            return;
+            return $this->redirect($this->Auth->redirectUrl());
         }
 
         parent::beforeFilter($event);
