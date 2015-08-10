@@ -47,7 +47,8 @@ class UsersController extends AppController
         $unAuthActions = ['signin', 'signup', 'recover'];
         $unAuth = in_array($this->request->params['action'], $unAuthActions);
         if ($this->Auth->user() && $unAuth) {
-            return $this->redirect($this->Auth->redirectUrl());
+            $this->redirect($this->Auth->redirectUrl());
+            return;
         }
 
         parent::beforeFilter($event);
@@ -110,6 +111,8 @@ class UsersController extends AppController
 
     /**
      * Users registration
+     *
+     * @return void
      */
     public function signup()
     {
@@ -131,6 +134,8 @@ class UsersController extends AppController
 
     /**
      * Authenticate users
+     *
+     * @return void
      */
     public function signin()
     {
@@ -152,6 +157,8 @@ class UsersController extends AppController
 
     /**
      * Un-authenticate users and remove data from session and cookie
+     *
+     * @return void
      */
     public function signout()
     {
@@ -187,6 +194,7 @@ class UsersController extends AppController
      *
      * @param int $id The user id being verified
      * @param string $token A secret token sent in the link
+     * @return void
      */
     public function recover($id, $token)
     {
@@ -215,6 +223,8 @@ class UsersController extends AppController
     /**
      * If a user hasn't verified his email and has lost the initial verification
      * mail he can request a new verification mail by visiting this action
+     *
+     * @return void
      */
     public function sendVerification()
     {
@@ -226,6 +236,8 @@ class UsersController extends AppController
     /**
      * Allows users to request an e-mail for password recovery token and
      * instructions
+     *
+     * @return void
      */
     public function sendRecovery()
     {

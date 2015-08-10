@@ -66,6 +66,7 @@ class User extends Entity
      * expiration date.
      *
      * @param string $token random token string.
+     * @param string $expiration the timestring duration of the token
      * @return boolean return true if token is successfully verified
      */
     public function verify($token, $expiration = '+1 day')
