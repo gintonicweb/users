@@ -2,7 +2,6 @@
 // @codingStandardsIgnoreFile
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
-use Cake\Network\Email\Email;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\I18n\I18n;
@@ -52,10 +51,6 @@ Cake\Datasource\ConnectionManager::config('test', [
 ]);
 
 Plugin::load('Users', ['path' => ROOT]);
-
-Configure::load('email');
-Email::configTransport(Configure::consume('EmailTransport'));
-Email::config(Configure::consume('Email'));
 
 Cake\Routing\DispatcherFactory::add('Routing');
 Cake\Routing\DispatcherFactory::add('ControllerFactory');
