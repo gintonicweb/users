@@ -1,5 +1,5 @@
 {
-    "name": "your-name-here/Users",
+    "name": "gintonicweb/users",
     "description": "Users plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
