@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Mailer;
+namespace Users\Mailer;
 
 use Cake\Mailer\Mailer;
 
 class UserMailer extends Mailer
 {
     /**
-     * Email meant to invite user to register their email address upon
-     * registration
+     * Email asking user to register their email address upon
+     * signup 
      *
      * @param User $user The entity object of the targeted user
      */
     public function signup($user)
     {
         $this->_email
-            ->profile('default');
-            ->template('signup');
+            ->profile('default')
+            ->template('signup')
             ->emailFormat('html')
-            ->to($user->email);
+            ->to($user->email)
             ->subject(sprintf('Welcome %s', $user->name));
 
         $this->set([
@@ -29,19 +29,18 @@ class UserMailer extends Mailer
     }
 
     /**
-     * If a user haven't registered his email address, a notification will
-     * inform him that he needs to do it. If he has lost the confirmation
-     * email, he can request a new one with this.
+     * If a user haven't registered his email address, and lost the confirmation
+     * email, he can request a new one.
      *
      * @param User $user The entity object of the targeted user
      */
     public function verification($user)
     {
         $this->_email
-            ->profile('default');
-            ->template('verification');
+            ->profile('default')
+            ->template('verification')
             ->emailFormat('html')
-            ->to($user->email);
+            ->to($user->email)
             ->subject('Account verification');
 
         $this->set([
@@ -52,17 +51,17 @@ class UserMailer extends Mailer
     }
 
     /**
-     * This is the email message that is sent upon the password recovery procedure
+     * Sent when a user ask for password recovery 
      *
      * @param User $user The entity object of the targeted user
      */
     public function recovery($user)
     {
         $this->_email
-            ->profile('default');
-            ->template('recovery');
+            ->profile('default')
+            ->template('recovery')
             ->emailFormat('html')
-            ->to($user->email);
+            ->to($user->email)
             ->subject('Password recovery');
 
         $this->set([

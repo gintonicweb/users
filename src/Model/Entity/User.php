@@ -18,8 +18,10 @@ class User extends Entity
      * @var array
      */
     protected $_accessible = [
+        '*' => true,
         'verified' => false,
         'token' => false,
+        'password' => false,
     ];
     protected $_virtual = ['full_name'];
     protected $_hidden = ['password', 'token', 'token_creation'];

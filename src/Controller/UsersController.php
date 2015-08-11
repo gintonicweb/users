@@ -6,6 +6,7 @@ use Cake\Collection\Collection;
 use Cake\Event\Event;
 use Cake\Mailer\MailerAwareTrait;
 
+use Cake\Core\App;
 /**
  * Users Controller
  *
@@ -122,7 +123,7 @@ class UsersController extends AppController
             if ($this->Users->save($user)) {
                 $this->Flash->set(__('Please check your e-mail to validate your account'));
                 $this->Auth->setUser($user->toArray());
-                $this->getMailer('User')->send('signup', [$user]);
+                $this->getMailer('Users.User')->send('signup', [$user]);
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
                 $this->Flash->error(__('An error occured while creating the account'));
@@ -250,7 +251,7 @@ class UsersController extends AppController
                 // careful: this is a guarded field
                 $user->updateToken();
                 if ($this->Users->save($user)) {
-                    $this->getMailer('User')->send('recovery', [$user]);
+                    $this->getMailer('Users.User')->send('recovery', [$user]);
                     $this->Flash->set(__('An email was sent with password recovery instructions.'));
                     return $this->redirect($this->Auth->redirectUrl());
                 }
