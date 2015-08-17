@@ -8,9 +8,10 @@ class UserMailer extends Mailer
 {
     /**
      * Email asking user to register their email address upon
-     * signup 
+     * signup
      *
      * @param User $user The entity object of the targeted user
+     * @return void
      */
     public function signup($user)
     {
@@ -33,6 +34,7 @@ class UserMailer extends Mailer
      * email, he can request a new one.
      *
      * @param User $user The entity object of the targeted user
+     * @return void
      */
     public function verification($user)
     {
@@ -54,6 +56,7 @@ class UserMailer extends Mailer
      * Sent when a user ask for password recovery 
      *
      * @param User $user The entity object of the targeted user
+     * @return void
      */
     public function recovery($user)
     {

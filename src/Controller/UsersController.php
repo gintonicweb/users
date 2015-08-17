@@ -3,10 +3,10 @@ namespace Users\Controller;
 
 use App\Controller\AppController;
 use Cake\Collection\Collection;
+use Cake\Core\App;
 use Cake\Event\Event;
 use Cake\Mailer\MailerAwareTrait;
 
-use Cake\Core\App;
 /**
  * Users Controller
  *
