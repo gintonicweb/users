@@ -53,7 +53,7 @@ class UserMailer extends Mailer
     }
 
     /**
-     * Sent when a user ask for password recovery 
+     * Sent when a user ask for password recovery
      *
      * @param User $user The entity object of the targeted user
      * @return void
