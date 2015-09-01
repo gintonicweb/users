@@ -17,8 +17,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Users\\Test\\": "tests",
-            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+            "Users\\Test\\": "tests"
         }
     }
 }
