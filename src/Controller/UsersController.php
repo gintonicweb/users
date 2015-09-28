@@ -28,8 +28,6 @@ class UsersController extends AppController
         parent::initialize();
         $this->loadComponent('Cookie');
         $this->loadComponent('Auth');
-        $this->Cookie->config('path', '/');
-        $this->Cookie->config(['httpOnly' => true]);
     }
 
     /**
@@ -42,14 +40,24 @@ class UsersController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->Auth->allow(['signin', 'signup', 'verify', 'recover', 'sendRecovery']);
-
-        // The following actions should not be available to authenticated users
-        $unAuthActions = ['signin', 'signup', 'recover'];
-        $unAuth = in_array($this->request->params['action'], $unAuthActions);
-        if ($this->Auth->user() && $unAuth) {
-            return $this->redirect($this->Auth->redirectUrl());
-        }
+        $this->Auth->config('authenticate', [
+            'FOC/Authenticate.Token' => [
+                'parameter' => '_token',
+                'header' => 'X-MyApiTokenHeader',
+                'userModel' => 'Users.Users',
+                //'scope' => ['Users.active' => 1],
+                'fields' => [
+                    'username' => 'email',
+                    'password' => 'password',
+                    'token' => 'token',
+                ],
+                'continue' => true
+            ]
+        ]);
+        $this->Crud->mapAction('signin', 'CrudUsers.Login');
+        $this->Crud->mapAction('signout', 'CrudUsers.Logout');
+        $this->Crud->mapAction('signup', 'CrudUsers.Register');
+        $this->Crud->addListener('Users.Users');
 
         parent::beforeFilter($event);
     }
@@ -107,65 +115,6 @@ class UsersController extends AppController
             $this->Flash->set(__('Error updating the account'));
         }
         $this->set(compact('user'));
-    }
-
-    /**
-     * Users registration
-     *
-     * @return void
-     */
-    public function signup()
-    {
-        if ($this->request->is(['post', 'put'])) {
-            $user = $this->Users->newEntity()->accessible('password', true);
-            $this->Users->patchEntity($user, $this->request->data);
-            $user->updateToken();
-            if ($this->Users->save($user)) {
-                $this->Flash->set(__('Please check your e-mail to validate your account'));
-                $this->Auth->setUser($user->toArray());
-                //$this->getMailer('Users.User')->send('signup', [$user]);
-                return $this->redirect($this->Auth->redirectUrl());
-            } else {
-                $this->Flash->error(__('An error occured while creating the account'));
-                return;
-            }
-        }
-    }
-
-    /**
-     * Authenticate users
-     *
-     * @return void
-     */
-    public function signin()
-    {
-        if ($this->request->is(['post', 'put'])) {
-            $user = $this->Auth->identify();
-            if ($user) {
-                $this->Auth->setUser($user);
-                if (isset($this->request->data['remember'])) {
-                    $this->Cookie->write('User', $user);
-                }
-                if (!$user['verified']) {
-                    $this->Flash->set(__('Login successful. Please validate your email address.'));
-                }
-                return $this->redirect($this->Auth->redirectUrl());
-            }
-            $this->Flash->set(__('Your username or password is incorrect.'));
-        }
-    }
-
-    /**
-     * Un-authenticate users and remove data from session and cookie
-     *
-     * @return void
-     */
-    public function signout()
-    {
-        $this->request->session()->destroy();
-        $this->Flash->set(__('You are now signed out.'));
-        $this->Cookie->delete('User');
-        return $this->redirect($this->Auth->logout());
     }
 
     /**
