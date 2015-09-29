@@ -24,7 +24,6 @@ class UsersFixture extends TestFixture
         'last' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'verified' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
         'token' => ['type' => 'string', 'length' => 32, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'token_creation' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
@@ -51,9 +50,8 @@ class UsersFixture extends TestFixture
             'last' => 'Lorem ipsum dolor sit amet',
             'verified' => 1,
             'token' => 'Lorem ipsum dolor sit amet',
-            'token_creation' => '2015-08-09 05:55:42',
-            'created' => '2015-08-09 05:55:42',
-            'modified' => '2015-08-09 05:55:42'
+            'created' => '2015-09-29 05:33:25',
+            'modified' => '2015-09-29 05:33:25'
         ],
     ];
 }

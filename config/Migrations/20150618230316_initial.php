@@ -37,11 +37,6 @@ class Initial extends AbstractMigration
                 'limit' => 32,
                 'null' => false,
             ])
-            ->addColumn('token_creation', 'datetime', [
-                'default' => null,
-                'limit' => null,
-                'null' => false,
-            ])
             ->addColumn('created', 'datetime', [
                 'default' => null,
                 'limit' => null,

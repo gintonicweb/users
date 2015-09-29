@@ -85,9 +85,7 @@ class UsersController extends AppController
      */
     public function view($id = null)
     {
-        if (empty($id) && $this->request->session()->read('Auth.User.id')) {
-            $id = $this->request->session()->read('Auth.User.id');
-        }
+        $id = $id != null ? $id : $this->Auth->user('id');
         $user = $this->Users->get($id);
         $this->set(compact('user'));
     }
@@ -100,19 +98,10 @@ class UsersController extends AppController
      */
     public function edit()
     {
-        $id = $this->request->session()->read('Auth.User.id');
+        $id = $this->Auth->user('id');
         $user = $this->Users->get($id)->accessible('password', true);
-
         if ($this->request->is(['post', 'put'])) {
-            if ($this->request->data['pwd'] != 'dummy') {
-                $this->request->data['password'] = $this->request->data['pwd'];
-            }
-            $user = $this->Users->patchEntity($user, $this->request->data);
-            if ($this->Users->save($user)) {
-                $this->Flash->set(__('Account updated successfully'));
-                return $this->redirect($this->Auth->redirectUrl());
-            }
-            $this->Flash->set(__('Error updating the account'));
+            $this->_update($user);
         }
         $this->set(compact('user'));
     }
@@ -123,11 +112,11 @@ class UsersController extends AppController
      *
      * @param int $id The user id being verified
      * @param string $token A secret token sent in the link
+     * @return void|\Cake\Network\Response
      */
     public function verify($id, $token)
     {
         $user = $this->Users->get($id);
-
         if ($user->verified || $user->verify($token)) {
             $this->Users->save($user);
             $this->Flash->set(__('Email address validated successfuly'));
@@ -143,30 +132,41 @@ class UsersController extends AppController
      *
      * @param int $id The user id being verified
      * @param string $token A secret token sent in the link
-     * @return void
+     * @return void|\Cake\Network\Response
      */
     public function recover($id, $token)
     {
         $user = $this->Users->get($id)->accessible('password', true);
         if (!$user->verify($token)) {
-            $this->Flash->set(__('Recovery token has expired'));
+            $this->Flash->set(__('Recovery token invalid'));
             return $this->redirect([
                 'controller' => 'Users',
                 'action' => 'sendRecovery',
-                'plugin' => 'GintonicCMS'
+                'plugin' => 'Users'
             ]);
         }
         if ($this->request->is(['post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->data);
-            if ($this->Users->save($user)) {
-                $this->Auth->setUser($user->toArray());
-                $this->Flash->set(__('Password has been updated successfully.'));
-                return $this->redirect($this->Auth->redirectUrl());
-            } else {
-                $this->Flash->set(__('Error while resetting password'));
-            }
+            $this->_update($user);
         }
         $this->set(compact('id', 'token'));
+    }
+
+    /**
+     * Anytime a user needs to be saved
+     *
+     * @param \Users\Model\Entity\User $user user entity
+     * @return void|\Cake\Network\Response
+     */
+    protected function _update($user)
+    {
+        $user = $this->Users->patchEntity(User $user, $this->request->data);
+        if ($this->Users->save($user)) {
+            $this->Auth->setUser($user->toArray());
+            $this->Flash->set(__('Password has been updated successfully.'));
+            return $this->redirect($this->Auth->redirectUrl());
+        } else {
+            $this->Flash->set(__('Error while resetting password'));
+        }
     }
 
     /**
@@ -186,7 +186,7 @@ class UsersController extends AppController
      * Allows users to request an e-mail for password recovery token and
      * instructions
      *
-     * @return void
+     * @return void|\Cake\Network\Response
      */
     public function sendRecovery()
     {
@@ -195,15 +195,10 @@ class UsersController extends AppController
 
             if (empty($user)) {
                 $this->Flash->set(__('No matching email address found.'));
-            } else {
-                // TODO: write a test that vaidates that the token is updated
-                // careful: this is a guarded field
-                $user->updateToken();
-                if ($this->Users->save($user)) {
-                    //$this->getMailer('Users.User')->send('recovery', [$user]);
-                    $this->Flash->set(__('An email was sent with password recovery instructions.'));
-                    return $this->redirect($this->Auth->redirectUrl());
-                }
+            } elseif ($this->Users->save($user)) {
+                //$this->getMailer('Users.User')->send('recovery', [$user]);
+                $this->Flash->set(__('An email was sent with password recovery instructions.'));
+                return $this->redirect($this->Auth->redirectUrl());
             }
         }
     }

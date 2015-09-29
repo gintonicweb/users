@@ -41,7 +41,7 @@ class User extends Entity
      * Virtual filed for full name of user.
      * return the concated string of first and last name of user as Full Name.
      *
-     * @return boolean | string full name of user.
+     * @return bool | string full name of user.
      */
     protected function _getFullName()
     {
@@ -69,7 +69,7 @@ class User extends Entity
      *
      * @param string $token random token string.
      * @param string $expiration the timestring duration of the token
-     * @return boolean return true if token is successfully verified
+     * @return bool return true if token is successfully verified
      */
     public function verify($token, $expiration = '+1 day')
     {

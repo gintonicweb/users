@@ -17,7 +17,7 @@ class UsersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.users.users'
+        'plugin.users.users',
     ];
 
     /**

@@ -46,17 +46,7 @@ class UsersControllerTest extends IntegrationTestCase
      */
     public function testIsAuthorized()
     {
-        $this->get('/users/view');
-        $this->assertResponseCode(302);
-        $this->session([
-            'Auth' => [
-                'User' => [
-                    'id' => 1
-                ]
-            ]
-        ]);
-        $this->get('/users/view');
-        $this->assertResponseOk();
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
@@ -75,36 +65,6 @@ class UsersControllerTest extends IntegrationTestCase
      * @return void
      */
     public function testEdit()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test signup method
-     *
-     * @return void
-     */
-    public function testSignup()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test signin method
-     *
-     * @return void
-     */
-    public function testSignin()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test signout method
-     *
-     * @return void
-     */
-    public function testSignout()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

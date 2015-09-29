@@ -2,17 +2,17 @@
 namespace Users\Model\Table;
 
 use Cake\ORM\Query;
-use Cake\ORM\ResultSet;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use Users\Model\Entity\User;
 
 /**
  * Users Model
  *
- * @property \Cake\ORM\Association\HasMany $Aros
+ * @property \Cake\ORM\Association\HasMany $MessageReadStatuses
+ * @property \Cake\ORM\Association\HasMany $Messages
+ * @property \Cake\ORM\Association\BelongsToMany $Threads
  */
 class UsersTable extends Table
 {
@@ -28,9 +28,25 @@ class UsersTable extends Table
         parent::initialize($config);
 
         $this->table('users');
-        $this->displayField('email');
+        $this->displayField('id');
         $this->primaryKey('id');
+
         $this->addBehavior('Timestamp');
+
+        $this->hasMany('MessageReadStatuses', [
+            'foreignKey' => 'user_id',
+            'className' => 'Users.MessageReadStatuses'
+        ]);
+        $this->hasMany('Messages', [
+            'foreignKey' => 'user_id',
+            'className' => 'Users.Messages'
+        ]);
+        $this->belongsToMany('Threads', [
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'thread_id',
+            'joinTable' => 'threads_users',
+            'className' => 'Users.Threads'
+        ]);
     }
 
     /**
@@ -61,6 +77,15 @@ class UsersTable extends Table
         $validator
             ->requirePresence('last', 'create')
             ->notEmpty('last');
+
+        $validator
+            ->add('verified', 'valid', ['rule' => 'boolean'])
+            ->requirePresence('verified', 'create')
+            ->notEmpty('verified');
+
+        $validator
+            ->requirePresence('token', 'create')
+            ->notEmpty('token');
 
         return $validator;
     }
