@@ -72,5 +72,6 @@ class UsersListener extends BaseListener
     public function afterLogout(Event $event)
     {
         $this->_controller()->Cookie->delete('User');
+        $this->_controller()->request->session()->destroy();
     }
 }

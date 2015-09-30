@@ -40,20 +40,6 @@ class UsersController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->Auth->config('authenticate', [
-            'FOC/Authenticate.Token' => [
-                'parameter' => '_token',
-                'header' => 'X-MyApiTokenHeader',
-                'userModel' => 'Users.Users',
-                //'scope' => ['Users.active' => 1],
-                'fields' => [
-                    'username' => 'email',
-                    'password' => 'password',
-                    'token' => 'token',
-                ],
-                'continue' => true
-            ]
-        ]);
         $this->Crud->mapAction('signin', 'CrudUsers.Login');
         $this->Crud->mapAction('signout', 'CrudUsers.Logout');
         $this->Crud->mapAction('signup', 'CrudUsers.Register');
@@ -159,7 +145,7 @@ class UsersController extends AppController
      */
     protected function _update($user)
     {
-        $user = $this->Users->patchEntity(User $user, $this->request->data);
+        $user = $this->Users->patchEntity($user, $this->request->data);
         if ($this->Users->save($user)) {
             $this->Auth->setUser($user->toArray());
             $this->Flash->set(__('Password has been updated successfully.'));
