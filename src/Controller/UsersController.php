@@ -49,20 +49,6 @@ class UsersController extends AppController
     }
 
     /**
-     * Authenticated users are allowed to access everything in this controller
-     *
-     * @param array|null $user The user to check the authorization of.
-     * @return bool True if $user is authorized, otherwise false
-     */
-    public function isAuthorized($user = null)
-    {
-        if (!empty($user)) {
-            return true;
-        }
-        return parent::isAuthorized($user);
-    }
-
-    /**
      * View method
      *
      * @param string|null $id User id.
