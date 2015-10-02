@@ -20,11 +20,11 @@ class UserMailer extends Mailer
             ->template('signup')
             ->emailFormat('html')
             ->to($user->email)
-            ->subject(sprintf('Welcome %s', $user->name));
+            ->subject(sprintf('Welcome %s', $user->username));
 
         $this->set([
             'userId' => $user->id,
-            'first' => $user->first,
+            'username' => $user->username,
             'token' => $user->token
         ]);
     }
@@ -47,7 +47,7 @@ class UserMailer extends Mailer
 
         $this->set([
             'userId' => $user->id,
-            'first' => $user->first,
+            'username' => $user->username,
             'token' => $this->token,
         ]);
     }
@@ -69,7 +69,7 @@ class UserMailer extends Mailer
 
         $this->set([
             'userId' => $user->id,
-            'first' => $user->first,
+            'username' => $user->username,
             'token' => $user->token
         ]);
     }

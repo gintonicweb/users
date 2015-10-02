@@ -3,8 +3,8 @@ namespace Users\Controller;
 
 use App\Controller\AppController;
 use Cake\Collection\Collection;
-use Cake\Core\App;
 use Cake\Event\Event;
+use Cake\Network\Exception\NotFoundException;
 use Cake\Mailer\MailerAwareTrait;
 
 /**
@@ -31,35 +31,61 @@ class UsersController extends AppController
     }
 
     /**
-     * Defines the methods that should be allowed for non authenticated users
-     * and the ones that shouldn't be accessed by authenticated users. Also
-     * define which actions should use the bare layout
+     * Users registration
      *
-     * @param Event $event An Event instance
      * @return void
      */
-    public function beforeFilter(Event $event)
+    public function signup()
     {
-        $this->Crud->mapAction('signin', 'CrudUsers.Login');
-        $this->Crud->mapAction('signout', 'CrudUsers.Logout');
-        $this->Crud->mapAction('signup', 'CrudUsers.Register');
-        $this->Crud->addListener('Users.Users');
-
-        parent::beforeFilter($event);
+        if ($this->request->is(['post', 'put'])) {
+            $user = $this->Users->newEntity()->accessible('password', true);
+            $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->set(__('Please check your e-mail to validate your account'));
+                $this->Auth->setUser($user->toArray());
+                //$this->getMailer('Users.User')->send('signup', [$user]);
+                return $this->redirect($this->Auth->redirectUrl());
+            } else {
+                $this->Flash->error(__('An error occured while creating the account'));
+                return;
+            }
+        }
     }
 
     /**
-     * View method
+     * Authenticate users
      *
-     * @param string|null $id User id.
      * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function view($id = null)
+    public function signin()
     {
-        $id = $id != null ? $id : $this->Auth->user('id');
-        $user = $this->Users->get($id);
-        $this->set(compact('user'));
+        if ($this->request->is(['post', 'put'])) {
+            $user = $this->Auth->identify();
+            if ($user) {
+                $this->Auth->setUser($user);
+                if (isset($this->request->data['remember'])) {
+                    $this->Cookie->write('User', $user);
+                }
+                if (!$user['verified']) {
+                    $this->Flash->set(__('Login successful. Please validate your email address.'));
+                }
+                return $this->redirect($this->Auth->redirectUrl());
+            }
+            $this->Flash->set(__('Your username or password is incorrect.'));
+        }
+    }
+
+    /**
+     * Un-authenticate users and remove data from session and cookie
+     *
+     * @return void
+     */
+    public function signout()
+    {
+        $this->request->session()->destroy();
+        $this->Flash->set(__('You are now signed out.'));
+        $this->Cookie->delete('User');
+        return $this->redirect($this->Auth->logout());
     }
 
     /**

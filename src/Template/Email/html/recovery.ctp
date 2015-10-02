@@ -11,7 +11,7 @@
 )?>
 
 <h1>Password Recovery</h1>
-<p>Hi <?= $first ?>,</p>
+<p>Hi <?= $username ?>,</p>
 <p>
 A password recovery request has been requested for your account on <?= $website ?>.<br>
     Please visit the following link to reset your password.<br>

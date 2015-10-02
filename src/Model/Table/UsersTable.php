@@ -1,6 +1,8 @@
 <?php
 namespace Users\Model\Table;
 
+use ArrayObject;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -70,23 +72,6 @@ class UsersTable extends Table
             ->requirePresence('password', 'create')
             ->notEmpty('password');
 
-        $validator
-            ->requirePresence('first', 'create')
-            ->notEmpty('first');
-
-        $validator
-            ->requirePresence('last', 'create')
-            ->notEmpty('last');
-
-        $validator
-            ->add('verified', 'valid', ['rule' => 'boolean'])
-            ->requirePresence('verified', 'create')
-            ->notEmpty('verified');
-
-        $validator
-            ->requirePresence('token', 'create')
-            ->notEmpty('token');
-
         return $validator;
     }
 
@@ -100,6 +85,12 @@ class UsersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['email']));
+        $rules->add($rules->isUnique(['username']));
         return $rules;
+    }
+
+    public function beforeSave(Event $event, User $entity, ArrayObject $options)
+    {
+        $event->token = md5(uniqid(rand(), true));
     }
 }

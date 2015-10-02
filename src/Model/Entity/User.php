@@ -38,32 +38,6 @@ class User extends Entity
     }
 
     /**
-     * Virtual filed for full name of user.
-     * return the concated string of first and last name of user as Full Name.
-     *
-     * @return bool | string full name of user.
-     */
-    protected function _getFullName()
-    {
-        if (isset($this->_properties['first']) && isset($this->_properties['last'])) {
-            return $this->_properties['first'] . ' ' . $this->_properties['last'];
-        }
-        return false;
-    }
-
-    /**
-     * The token is designed to expire after some amount of time. This
-     * method refreshes the token.
-     *
-     * @return void
-     */
-    public function updateToken()
-    {
-        $this->token = md5(uniqid(rand(), true));
-        $this->token_creation = Time::now();
-    }
-
-    /**
      * Mark the account as verified when a valid token is provided within
      * expiration date.
      *

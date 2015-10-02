@@ -40,22 +40,13 @@ class UsersControllerTest extends IntegrationTestCase
     }
 
     /**
-     * Test isAuthorized method
-     *
-     * @return void
-     */
-    public function testIsAuthorized()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Test view method
      *
      * @return void
      */
     public function testView()
     {
+        $this->get('/view');
         $this->markTestIncomplete('Not implemented yet.');
     }
 

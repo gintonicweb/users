@@ -1,7 +1,7 @@
 <?php
 use Phinx\Migration\AbstractMigration;
 
-class Initial extends AbstractMigration
+class Users extends AbstractMigration
 {
     public function up()
     {
@@ -17,12 +17,7 @@ class Initial extends AbstractMigration
                 'limit' => 255,
                 'null' => false,
             ])
-            ->addColumn('first', 'string', [
-                'default' => null,
-                'limit' => 255,
-                'null' => false,
-            ])
-            ->addColumn('last', 'string', [
+            ->addColumn('usersname', 'string', [
                 'default' => null,
                 'limit' => 255,
                 'null' => false,

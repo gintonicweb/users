@@ -10,7 +10,7 @@
     true
 )?>
 <h1>Welcome to </h1>
-<p>Hi <?= $first ?>,</p>
+<p>Hi <?= $username ?>,</p>
 <p>
     This email to confirm the creation of your account on <?= $website ?>.<br>
     Please visit the following link to confirm your email address.<br>

@@ -11,7 +11,7 @@
 )?>
 
 <h1>Email verification</h1>
-<p>Hi <?= $first ?>,</p>
+<p>Hi <?= $username ?>,</p>
 <p>
     An email verification has been requested for your account on <?= $website ?>.<br>
     Please visit the following link to confirm your account.<br>
