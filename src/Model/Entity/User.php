@@ -23,7 +23,6 @@ class User extends Entity
         'token' => false,
         'password' => false,
     ];
-    protected $_virtual = ['full_name'];
     protected $_hidden = ['password', 'token', 'token_creation'];
 
     /**

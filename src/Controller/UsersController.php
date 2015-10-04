@@ -27,7 +27,6 @@ class UsersController extends AppController
     {
         parent::initialize();
         $this->loadComponent('Cookie');
-        $this->loadComponent('Auth');
     }
 
     /**

@@ -117,3 +117,4 @@ Plugin::load('Users', [
     'path' => ROOT . DS,
     'routes' => true
 ]);
+Cake\Utility\Security::salt('8b61f851d8cb3dfcf3b447dc67bd7bf9fe2ed91a916d4457f4969a05a637473d');

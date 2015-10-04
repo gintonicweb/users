@@ -1,6 +1,7 @@
 <?php
 namespace Users\Test\TestCase\Controller;
 
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 use Users\Controller\UsersController;
 
@@ -26,27 +27,90 @@ class UsersControllerTest extends IntegrationTestCase
      */
     public function testInitialize()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $controller = new UsersController();
+        $controller->initialize();
+        $result = $controller->components()->loaded();
+
+        $this->assertTrue(in_array('Auth', $result));
+        $this->assertTrue(in_array('Cookie', $result));
+        $this->assertTrue(in_array('Flash', $result));
     }
 
     /**
-     * Test beforeFilter method
+     * Test signup method
      *
      * @return void
      */
-    public function testBeforeFilter()
+    public function testSignup()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/signup');
+        $this->assertResponseOk();
+
+        $data = [
+            'email' => 'phillaf@blackhole.io',
+            'password' => '123456',
+            'username' => 'phillaf',
+        ];
+        $this->post('/signup', $data);
+        $this->assertResponseSuccess();
+
+        $this->post('/signup', $data);
+        $this->assertResponseFailure();
+
+        $usersTable = TableRegistry::get('Users.Users');
+        $user = $usersTable
+            ->find()
+            ->select(['email', 'password', 'username', 'verified', 'token'])
+            ->where(['email' => 'phillaf@blackhole.io'])
+            ->first();
+
+        $user->hiddenProperties([]);
+        $user = $user->toArray();
+
+        $this->assertEquals($user['email'], 'phillaf@blackhole.io');
+        $this->assertEquals($user['username'], 'phillaf');
+        $this->assertEquals(60, strlen($user['password']));
+        $this->assertFalse($user['verified']);
+        $this->assertEquals(32, strlen($user['token']));
     }
 
     /**
-     * Test view method
+     * Test signin method
      *
      * @return void
      */
-    public function testView()
+    public function testSignin()
     {
-        $this->get('/view');
+        $this->get('/signin');
+        $this->assertResponseOk();
+
+        $data = [
+            'email' => 'test@blackhole.io',
+            'password' => 'wrong password',
+        ];
+        $this->post('/signin', $data);
+        $this->assertResponseFailure();
+
+        $data = [
+            'email' => 'test@blackhole.io',
+            'password' => '123456',
+            'remember' => 'remember-me',
+        ];
+        $this->post('/signin', $data);
+        $this->assertResponseSuccess();
+
+        $cookie = (array)json_decode($this->_response->cookie('User')['value']);
+        $this->markTestIncomplete('Not implemented yet.');
+        //$this->assertEquals($cookie['id'], 1);
+    }
+
+    /**
+     * Test signout method
+     *
+     * @return void
+     */
+    public function testSignout()
+    {
         $this->markTestIncomplete('Not implemented yet.');
     }
 

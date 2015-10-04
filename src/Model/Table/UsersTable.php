@@ -65,11 +65,11 @@ class UsersTable extends Table
 
         $validator
             ->add('email', 'valid', ['rule' => 'email'])
-            ->requirePresence('email', 'create')
+            ->requirePresence('email')
             ->notEmpty('email');
 
         $validator
-            ->requirePresence('password', 'create')
+            ->requirePresence('password')
             ->notEmpty('password');
 
         return $validator;
@@ -91,6 +91,9 @@ class UsersTable extends Table
 
     public function beforeSave(Event $event, User $entity, ArrayObject $options)
     {
-        $event->token = md5(uniqid(rand(), true));
+        $entity->token = md5(uniqid(rand(), true));
+        if (empty($entity->username)) {
+            $entity->username = $entity->email;
+        }
     }
 }
