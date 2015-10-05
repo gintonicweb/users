@@ -17,7 +17,7 @@ class UserMailer extends Mailer
     {
         $this->_email
             ->profile('default')
-            ->template('signup')
+            ->template('Users.signup')
             ->emailFormat('html')
             ->to($user->email)
             ->subject(sprintf('Welcome %s', $user->username));
@@ -40,7 +40,7 @@ class UserMailer extends Mailer
     {
         $this->_email
             ->profile('default')
-            ->template('verification')
+            ->template('Users.verification')
             ->emailFormat('html')
             ->to($user->email)
             ->subject('Account verification');
@@ -62,7 +62,7 @@ class UserMailer extends Mailer
     {
         $this->_email
             ->profile('default')
-            ->template('recovery')
+            ->template('Users.recovery')
             ->emailFormat('html')
             ->to($user->email)
             ->subject('Password recovery');

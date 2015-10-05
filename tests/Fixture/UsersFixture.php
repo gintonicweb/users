@@ -46,7 +46,7 @@ class UsersFixture extends TestFixture
             'password' => '123456',
             'username' => 'test_user',
             'verified' => 0,
-            'token' => 'Lorem ipsum dolor sit amet',
+            'token' => 'this.is.a.token',
             'created' => '2015-09-29 05:33:25',
             'modified' => '2015-09-29 05:33:25'
         ],

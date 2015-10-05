@@ -119,39 +119,19 @@ class UsersController extends AppController
      */
     public function verify($id, $token)
     {
-        $user = $this->Users->get($id);
-        if ($user->verified || $user->verify($token)) {
-            $this->Users->save($user);
-            $this->Flash->set(__('Email address validated successfuly'));
-        } else {
-            $this->Flash->set(__('Error while validating email'));
-        }
-        return $this->redirect($this->Auth->redirectUrl());
-    }
+        $user = $this->Users->find()
+            ->where(['id' => $id, 'token' => $token])
+            ->first();
 
-    /**
-     * Allow users to reset their passwords without being logged in. Users end
-     * up here by following a link they get via email.
-     *
-     * @param int $id The user id being verified
-     * @param string $token A secret token sent in the link
-     * @return void|\Cake\Network\Response
-     */
-    public function recover($id, $token)
-    {
-        $user = $this->Users->get($id)->accessible('password', true);
-        if (!$user->verify($token)) {
-            $this->Flash->set(__('Recovery token invalid'));
-            return $this->redirect([
-                'controller' => 'Users',
-                'action' => 'sendRecovery',
-                'plugin' => 'Users'
-            ]);
+        if (!$user) {
+            throw new NotFoundException(__('Error while validating email'));
         }
-        if ($this->request->is(['post', 'put'])) {
-            $this->_update($user);
-        }
-        $this->set(compact('id', 'token'));
+
+        $user->verified = true;
+        $this->Users->save($user);
+        $this->Auth->setUser($user->toArray());
+        $this->Flash->set(__('Email address validated successfuly'));
+        return $this->redirect($this->Auth->redirectUrl());
     }
 
     /**
@@ -180,9 +160,16 @@ class UsersController extends AppController
      */
     public function sendVerification()
     {
-        $userId = $this->request->session()->read('Auth.User.id');
-        $user = $this->Users->get($userId);
-        //$this->getMailer('User')->send('verification', [$user]);
+        $this->render(false);
+        $id = $this->Auth->user('id');
+        $user = $this->Users->find()->where(['id' => $id])->first();
+        if (!$user) {
+            throw new NotFoundException('User could not be found');
+        }
+        $user->dirty('token', true);
+        if ($this->Users->save($user)) {
+           //$this->getMailer('User')->send('verification', [$user]);
+        }
     }
 
     /**
@@ -195,14 +182,12 @@ class UsersController extends AppController
     {
         if ($this->request->is(['post', 'put'])) {
             $user = $this->Users->findByEmail($this->request->data['email'])->first();
-
-            if (empty($user)) {
-                $this->Flash->set(__('No matching email address found.'));
-            } elseif ($this->Users->save($user)) {
-                //$this->getMailer('Users.User')->send('recovery', [$user]);
-                $this->Flash->set(__('An email was sent with password recovery instructions.'));
-                return $this->redirect($this->Auth->redirectUrl());
+            $user->dirty('token', true);
+            if ($user && $this->Users->save($user)) {
+                $this->getMailer('Users.User')->send('recovery', [$user]);
             }
+            $this->Flash->set(__('An email was sent with password recovery instructions.'));
+            return $this->redirect($this->Auth->redirectUrl());
         }
     }
 }

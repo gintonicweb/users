@@ -71,7 +71,7 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertEquals($user['username'], 'phillaf');
         $this->assertEquals(60, strlen($user['password']));
         $this->assertFalse($user['verified']);
-        $this->assertEquals(32, strlen($user['token']));
+        $this->assertEquals($user['token'],false);
     }
 
     /**
@@ -122,7 +122,6 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertSession(null, 'Auth.User.id');
 
         // TODO: Check that cookie is unset
-        $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
@@ -147,8 +146,8 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseSuccess();
 
         $usersTable = TableRegistry::get('Users.Users');
-        $count = $usersTable->find()->where(['email' => 'new@blackhole.io'])->count();
-        $this->assertEquals($count, 1);
+        $count = $usersTable->exists(['email' => 'new@blackhole.io']);
+        $this->assertTrue($count);
     }
 
     /**
@@ -158,17 +157,15 @@ class UsersControllerTest extends IntegrationTestCase
      */
     public function testVerify()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $this->post('/users/verify/1/this.is.a.token');
+        $this->assertResponseSuccess();
 
-    /**
-     * Test recover method
-     *
-     * @return void
-     */
-    public function testRecover()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $usersTable = TableRegistry::get('Users.Users');
+        $user = $usersTable->get(1)->hiddenProperties([])->toArray();
+
+        $this->assertEmpty($user['token']);
+        $this->assertTrue($user['verified']);
+        $this->assertSession(1, 'Auth.User.id');
     }
 
     /**
@@ -178,7 +175,20 @@ class UsersControllerTest extends IntegrationTestCase
      */
     public function testSendVerification()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 1
+                ]
+            ]
+        ]);
+        $this->post('/users/sendVerification');
+        $this->assertResponseSuccess();
+
+        $usersTable = TableRegistry::get('Users.Users');
+        $user = $usersTable->get(1)->hiddenProperties([])->toArray();
+        $this->assertNotEmpty($user['token']);
+        $this->assertEquals(strlen($user['token']), '32');
     }
 
     /**
@@ -188,16 +198,15 @@ class UsersControllerTest extends IntegrationTestCase
      */
     public function testSendRecovery()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $data = [
+            'email' => 'test@blackhole.io'
+        ];
+        $this->post('/users/sendRecovery', $data);
+        $this->assertResponseSuccess();
 
-    /**
-     * Test getMailer method
-     *
-     * @return void
-     */
-    public function testGetMailer()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $usersTable = TableRegistry::get('Users.Users');
+        $user = $usersTable->get(1)->hiddenProperties([])->toArray();
+        $this->assertNotEmpty($user['token']);
+        $this->assertEquals(strlen($user['token']), '32');
     }
 }

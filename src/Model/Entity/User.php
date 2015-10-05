@@ -35,21 +35,4 @@ class User extends Entity
     {
         return (new DefaultPasswordHasher)->hash($password);
     }
-
-    /**
-     * Mark the account as verified when a valid token is provided within
-     * expiration date.
-     *
-     * @param string $token random token string.
-     * @param string $expiration the timestring duration of the token
-     * @return bool return true if token is successfully verified
-     */
-    public function verify($token, $expiration = '+1 day')
-    {
-        $time = new Time($this->token_creation);
-        if ($this->token == $token && $time->wasWithinLast($expiration)) {
-            $this->verified = true;
-        }
-        return $this->verified;
-    }
 }

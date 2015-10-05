@@ -75,7 +75,7 @@ class UsersTable extends Table
     }
 
     /**
-     * Creates a new token if it is marked as empty and use email as the 
+     * Creates a new token if it is marked as empty and use email as the
      * username if username is blank
      *
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.

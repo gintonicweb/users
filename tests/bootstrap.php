@@ -6,6 +6,7 @@ use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\I18n\I18n;
 use Cake\Log\Log;
+use Cake\Mailer\Email;
 use Cake\Routing\Router;
 
 require_once 'vendor/autoload.php';
@@ -93,6 +94,18 @@ ConnectionManager::config('test_custom_i18n_datasource', ['url' => getenv('db_ds
 Configure::write('Session', [
     'defaults' => 'php'
 ]);
+Configure::write('EmailTransport', [
+    'default' => ['className' => 'Debug']
+]);
+Configure::write('Email', [
+    'default' => [
+        'transport' => 'default',
+        'from' => 'you@localhost',
+    ],
+]);
+
+Email::configTransport(Configure::consume('EmailTransport'));
+Email::config(Configure::consume('Email'));
 
 Log::config([
     'debug' => [
@@ -118,3 +131,4 @@ Plugin::load('Users', [
     'routes' => true
 ]);
 Cake\Utility\Security::salt('8b61f851d8cb3dfcf3b447dc67bd7bf9fe2ed91a916d4457f4969a05a637473d');
+
