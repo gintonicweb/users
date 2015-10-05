@@ -25,6 +25,8 @@ class AppController extends Controller
                 'action' => 'signin'
             ]
         ]);
+        $this->loadComponent('Cookie');
+        $this->Cookie->configKey('User', 'encryption', false);
         $this->Auth->allow(['signup', 'signin']);
         parent::initialize();
     }

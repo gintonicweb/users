@@ -4,8 +4,8 @@ namespace Users\Controller;
 use App\Controller\AppController;
 use Cake\Collection\Collection;
 use Cake\Event\Event;
-use Cake\Network\Exception\NotFoundException;
 use Cake\Mailer\MailerAwareTrait;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * Users Controller
@@ -45,8 +45,8 @@ class UsersController extends AppController
                 //$this->getMailer('Users.User')->send('signup', [$user]);
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
+                return false;
                 $this->Flash->error(__('An error occured while creating the account'));
-                return;
             }
         }
     }
@@ -71,6 +71,7 @@ class UsersController extends AppController
                 return $this->redirect($this->Auth->redirectUrl());
             }
             $this->Flash->set(__('Your username or password is incorrect.'));
+            return false;
         }
     }
 
@@ -82,8 +83,8 @@ class UsersController extends AppController
     public function signout()
     {
         $this->request->session()->destroy();
-        $this->Flash->set(__('You are now signed out.'));
         $this->Cookie->delete('User');
+        $this->Flash->set(__('You are now signed out.'));
         return $this->redirect($this->Auth->logout());
     }
 
@@ -96,7 +97,12 @@ class UsersController extends AppController
     public function edit()
     {
         $id = $this->Auth->user('id');
-        $user = $this->Users->get($id)->accessible('password', true);
+        $user = $this->Users->find()->where(['id' => $id])->first();
+        if (!$user) {
+            throw new NotFoundException('User could not be found');
+        }
+            
+        $user->accessible('password', true);
         if ($this->request->is(['post', 'put'])) {
             $this->_update($user);
         }

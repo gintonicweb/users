@@ -34,21 +34,6 @@ class UsersTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
-
-        $this->hasMany('MessageReadStatuses', [
-            'foreignKey' => 'user_id',
-            'className' => 'Users.MessageReadStatuses'
-        ]);
-        $this->hasMany('Messages', [
-            'foreignKey' => 'user_id',
-            'className' => 'Users.Messages'
-        ]);
-        $this->belongsToMany('Threads', [
-            'foreignKey' => 'user_id',
-            'targetForeignKey' => 'thread_id',
-            'joinTable' => 'threads_users',
-            'className' => 'Users.Threads'
-        ]);
     }
 
     /**
@@ -69,7 +54,7 @@ class UsersTable extends Table
             ->notEmpty('email');
 
         $validator
-            ->requirePresence('password')
+            ->requirePresence('password', 'create')
             ->notEmpty('password');
 
         return $validator;
@@ -89,9 +74,18 @@ class UsersTable extends Table
         return $rules;
     }
 
+    /**
+     * Creates a new token if it is marked as empty and use email as the 
+     * username if username is blank
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
     public function beforeSave(Event $event, User $entity, ArrayObject $options)
     {
-        $entity->token = md5(uniqid(rand(), true));
+        $uuid = md5(uniqid(rand(), true));
+        $entity->token = $entity->dirty('token') ? $uuid : false;
+
         if (empty($entity->username)) {
             $entity->username = $entity->email;
         }

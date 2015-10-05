@@ -42,7 +42,6 @@ class UsersFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 1,
             'email' => 'test@blackhole.io',
             'password' => '123456',
             'username' => 'test_user',

@@ -100,8 +100,8 @@ class UsersControllerTest extends IntegrationTestCase
         $this->assertResponseSuccess();
 
         $cookie = (array)json_decode($this->_response->cookie('User')['value']);
-        $this->markTestIncomplete('Not implemented yet.');
-        //$this->assertEquals($cookie['id'], 1);
+        $this->assertEquals($cookie['id'], 1);
+        $this->assertSession(1, 'Auth.User.id');
     }
 
     /**
@@ -111,6 +111,17 @@ class UsersControllerTest extends IntegrationTestCase
      */
     public function testSignout()
     {
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 1
+                ]
+            ]
+        ]);
+        $this->post('/signout');
+        $this->assertSession(null, 'Auth.User.id');
+
+        // TODO: Check that cookie is unset
         $this->markTestIncomplete('Not implemented yet.');
     }
 
@@ -121,7 +132,23 @@ class UsersControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 1
+                ]
+            ]
+        ]);
+        $data = [
+            'username' => 'new username',
+            'email' => 'new@blackhole.io'
+        ];
+        $this->post('/users/edit', $data);
+        $this->assertResponseSuccess();
+
+        $usersTable = TableRegistry::get('Users.Users');
+        $count = $usersTable->find()->where(['email' => 'new@blackhole.io'])->count();
+        $this->assertEquals($count, 1);
     }
 
     /**
