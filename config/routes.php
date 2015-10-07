@@ -15,4 +15,13 @@ Router::scope('/', ['plugin' => 'Users'], function ($routes) {
     );
     $routes->fallbacks('DashedRoute');
 
+    $routes->prefix('api', function ($routes) {
+        $routes->extensions(['json','xml']);
+        $routes->connect('/users', ['controller' => 'Users']);
+        $routes->connect('/users/register', ['controller' => 'Users', 'action' => 'add']);
+        $routes->connect('/users/:action/*', ['controller' => 'Users']);
+        $routes->resources('Users.Users');
+        $routes->fallbacks('DashedRoute');
+    });
+
 });
