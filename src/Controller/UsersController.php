@@ -6,6 +6,8 @@ use Cake\Collection\Collection;
 use Cake\Event\Event;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\NotFoundException;
+use Cake\Utility\Security;
+use JWT;
 
 /**
  * Users Controller
@@ -62,9 +64,14 @@ class UsersController extends AppController
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
+                $token = $this->_initJwt($user['id']);
                 if (isset($this->request->data['remember'])) {
                     $this->Cookie->write('User', $user);
+                    $this->Cookie->configKey('Jwt', [
+                        'expires' => $this->Cookie->configKey('User')['expires']
+                    ]);
                 }
+                $this->Cookie->write('Jwt', $token);
                 if (!$user['verified']) {
                     $this->Flash->set(__('Login successful. Please validate your email address.'));
                 }
@@ -76,6 +83,24 @@ class UsersController extends AppController
     }
 
     /**
+     * Authenticate users
+     *
+     * @return void
+     */
+    protected function _initJwt($userId)
+    {
+        $this->Cookie->configKey('Jwt', [
+            'encryption' => false,
+            'expires' => 0,
+        ]);
+        $token = [
+            'id' => $userId,
+            'exp' => time() + strtotime($this->Cookie->configKey('User')['expires'])
+        ];
+        return JWT::encode($token, Security::salt());
+    }
+
+    /**
      * Un-authenticate users and remove data from session and cookie
      *
      * @return void
@@ -84,6 +109,7 @@ class UsersController extends AppController
     {
         $this->request->session()->destroy();
         $this->Cookie->delete('User');
+        $this->Cookie->delete('Jwt');
         $this->Flash->set(__('You are now signed out.'));
         return $this->redirect($this->Auth->logout());
     }
