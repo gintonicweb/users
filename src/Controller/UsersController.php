@@ -64,14 +64,11 @@ class UsersController extends AppController
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
-                $token = $this->_initJwt($user['id']);
+                $this->_setJwt($user['id'], 0);
                 if (isset($this->request->data['remember'])) {
                     $this->Cookie->write('User', $user);
-                    $this->Cookie->configKey('Jwt', [
-                        'expires' => $this->Cookie->configKey('User')['expires']
-                    ]);
+                    $this->_setJwt($user['id']);
                 }
-                $this->Cookie->write('Jwt', $token);
                 if (!$user['verified']) {
                     $this->Flash->set(__('Login successful. Please validate your email address.'));
                 }
@@ -87,17 +84,20 @@ class UsersController extends AppController
      *
      * @return void
      */
-    protected function _initJwt($userId)
+    protected function _setJwt($userId, $expires = null)
     {
+        if ($expires === null) {
+            $expires = $this->Cookie->configKey('User')['expires'];
+        }
         $this->Cookie->configKey('Jwt', [
             'encryption' => false,
-            'expires' => 0,
+            'expires' => $expires,
         ]);
         $token = [
             'id' => $userId,
             'exp' => time() + strtotime($this->Cookie->configKey('User')['expires'])
         ];
-        return JWT::encode($token, Security::salt());
+        $this->Cookie->write('Jwt', JWT::encode($token, Security::salt()));
     }
 
     /**
