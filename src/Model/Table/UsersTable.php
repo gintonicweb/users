@@ -2,12 +2,14 @@
 namespace Users\Model\Table;
 
 use ArrayObject;
+use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Users\Model\Entity\User;
+use Search\Manager;
 
 /**
  * Users Model
@@ -34,6 +36,9 @@ class UsersTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+        if (Plugin::loaded('Search')) {
+            $this->addBehavior('Search.Search');
+        }
     }
 
     /**
@@ -89,5 +94,16 @@ class UsersTable extends Table
         if (empty($entity->username)) {
             $entity->username = $entity->email;
         }
+    }
+
+    public function searchConfiguration()
+    {
+        $search = new Manager($this);
+        $search->like('username', [
+            'before' => true,
+            'after' => true,
+            'field' => [$this->aliasField('username')]
+        ]);
+        return $search;
     }
 }

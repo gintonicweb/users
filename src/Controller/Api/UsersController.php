@@ -33,6 +33,16 @@ class UsersController extends AppController
         $this->Auth->allow(['add', 'token']);
     }
 
+    public function index()
+    {
+        $this->Crud->on('beforePaginate', function(Event $event) {
+            $query = $this->Users->find('search', $this->request->query);
+            $query = $query->select(['username']);
+            $event->subject->query = $query;
+        });
+        $this->Crud->execute();
+    }
+
     /**
      * Regular register method now also returns a token upon registration
      *

@@ -66,6 +66,7 @@ class UsersController extends AppController
                 $this->Auth->setUser($user);
                 $this->_setJwt($user['id'], 0);
                 if (isset($this->request->data['remember'])) {
+                    $user['password'] = $this->request->data['password'];
                     $this->Cookie->write('User', $user);
                     $this->_setJwt($user['id']);
                 }
