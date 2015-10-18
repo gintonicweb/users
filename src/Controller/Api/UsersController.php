@@ -37,7 +37,7 @@ class UsersController extends AppController
     {
         $this->Crud->on('beforePaginate', function(Event $event) {
             $query = $this->Users->find('search', $this->request->query);
-            $query = $query->select(['username']);
+            $query = $query->select(['id','username']);
             $event->subject->query = $query;
         });
         $this->Crud->execute();
