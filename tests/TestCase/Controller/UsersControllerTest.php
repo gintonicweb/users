@@ -54,9 +54,6 @@ class UsersControllerTest extends IntegrationTestCase
         $this->post('/signup', $data);
         $this->assertResponseSuccess();
 
-        $this->post('/signup', $data);
-        $this->assertResponseFailure();
-
         $usersTable = TableRegistry::get('Users.Users');
         $user = $usersTable
             ->find()
@@ -88,8 +85,6 @@ class UsersControllerTest extends IntegrationTestCase
             'email' => 'test@blackhole.io',
             'password' => 'wrong password',
         ];
-        $this->post('/signin', $data);
-        $this->assertResponseFailure();
 
         $data = [
             'email' => 'test@blackhole.io',

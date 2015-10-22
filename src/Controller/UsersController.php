@@ -47,8 +47,8 @@ class UsersController extends AppController
                 //$this->getMailer('Users.User')->send('signup', [$user]);
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
-                return;
                 $this->Flash->error(__('An error occured while creating the account'));
+                return;
             }
         }
     }
