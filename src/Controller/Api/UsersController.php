@@ -25,7 +25,10 @@ class UsersController extends AppController
     ];
 
     /**
-     * {@inherit}
+     * No need to be logged in to sign in or sign up
+     *
+     * @param \Cake\Event\Event $event Event instance
+     * @return void
      */
     public function beforeFilter(Event $event)
     {
@@ -33,11 +36,18 @@ class UsersController extends AppController
         $this->Auth->allow(['add', 'token']);
     }
 
+    /**
+     * Currently used as a search function uses 'username' as the param
+     *
+     * e.g. http://example.com/api/users.json?usernam=phil
+     *
+     * @return void
+     */
     public function index()
     {
-        $this->Crud->on('beforePaginate', function(Event $event) {
+        $this->Crud->on('beforePaginate', function (Event $event) {
             $query = $this->Users->find('search', $this->request->query);
-            $query = $query->select(['id','username']);
+            $query = $query->select(['id', 'username']);
             $event->subject->query = $query;
         });
         $this->Crud->execute();
@@ -45,8 +55,9 @@ class UsersController extends AppController
 
     /**
      * Regular register method now also returns a token upon registration
-     *
      * token expiration is set for 1 week
+     *
+     * @return \Cake\Network\Response
      */
     public function add()
     {
@@ -68,6 +79,8 @@ class UsersController extends AppController
 
     /**
      * Tries to authentify user based on POST data and returns a private token
+     *
+     * @return void
      */
     public function token()
     {

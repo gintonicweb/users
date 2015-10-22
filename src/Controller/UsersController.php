@@ -34,7 +34,7 @@ class UsersController extends AppController
     /**
      * Users registration
      *
-     * @return void
+     * @return void|\Cake\Network\Response
      */
     public function signup()
     {
@@ -47,8 +47,8 @@ class UsersController extends AppController
                 //$this->getMailer('Users.User')->send('signup', [$user]);
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
-                return;
                 $this->Flash->error(__('An error occured while creating the account'));
+                return;
             }
         }
     }
@@ -56,7 +56,7 @@ class UsersController extends AppController
     /**
      * Authenticate users
      *
-     * @return void
+     * @return void|\Cake\Network\Response
      */
     public function signin()
     {
@@ -83,6 +83,8 @@ class UsersController extends AppController
     /**
      * Authenticate users
      *
+     * @param int $userId id of the authentified user
+     * @param string $expires hoq long the Jwt cookie should last
      * @return void
      */
     protected function _setJwt($userId, $expires = null)
@@ -104,7 +106,7 @@ class UsersController extends AppController
     /**
      * Un-authenticate users and remove data from session and cookie
      *
-     * @return void
+     * @return void|\Cake\Network\Response
      */
     public function signout()
     {

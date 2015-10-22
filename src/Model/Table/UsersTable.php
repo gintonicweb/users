@@ -8,8 +8,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Users\Model\Entity\User;
 use Search\Manager;
+use Users\Model\Entity\User;
 
 /**
  * Users Model
@@ -83,8 +83,10 @@ class UsersTable extends Table
      * Creates a new token if it is marked as empty and use email as the
      * username if username is blank
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param \Cake\Event\Event $event Event instance
+     * @param \Users\Model\Entity\User $entity User being saved
+     * @param ArrayObject $options option
+     * @return void
      */
     public function beforeSave(Event $event, User $entity, ArrayObject $options)
     {
@@ -96,6 +98,10 @@ class UsersTable extends Table
         }
     }
 
+    /**
+     * Allows to search users by partial username
+     * @return \Search\Manager
+     */
     public function searchConfiguration()
     {
         $search = new Manager($this);
