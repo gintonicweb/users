@@ -42,9 +42,13 @@ class UsersController extends AppController
             $user = $this->Users->newEntity()->accessible('password', true);
             $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
-                $this->Flash->set(__('Please check your e-mail to validate your account'));
+
                 $this->Auth->setUser($user->toArray());
                 //$this->getMailer('Users.User')->send('signup', [$user]);
+                $event = new Event('Users.afterSignup', $user);
+                $this->eventManager()->dispatch($event);
+
+                $this->Flash->set(__('Please check your e-mail to validate your account'));
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
                 $this->Flash->error(__('An error occured while creating the account'));

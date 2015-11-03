@@ -73,6 +73,8 @@ class UsersController extends AppController
                 ]);
                 $this->Crud->action()->config('serialize.data', 'data');
             }
+            $signupEvent = new Event('Users.afterSignup', $event->subject());
+            $this->eventManager()->dispatch($signupEvent);
         });
         return $this->Crud->execute();
     }
