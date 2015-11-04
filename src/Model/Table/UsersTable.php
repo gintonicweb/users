@@ -36,6 +36,7 @@ class UsersTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Muffin/Trash.Trash');
         if (Plugin::loaded('Search')) {
             $this->addBehavior('Search.Search');
         }

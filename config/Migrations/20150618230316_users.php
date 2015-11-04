@@ -42,6 +42,11 @@ class Users extends AbstractMigration
                 'limit' => null,
                 'null' => true,
             ])
+            ->addColumn('deleted', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
             ->create();
     }
 
