@@ -49,11 +49,10 @@ class UsersController extends AppController
                 $this->eventManager()->dispatch($event);
 
                 $this->Flash->set(__('Please check your e-mail to validate your account'));
-                return $this->redirect($this->Auth->redirectUrl());
             } else {
                 $this->Flash->error(__('An error occured while creating the account'));
-                return;
             }
+            return $this->redirect($this->Auth->redirectUrl());
         }
     }
 

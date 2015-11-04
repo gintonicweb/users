@@ -25,6 +25,7 @@ class UsersFixture extends TestFixture
         'token' => ['type' => 'string', 'length' => 32, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null, 'fixed' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
+        'deleted' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
@@ -48,7 +49,8 @@ class UsersFixture extends TestFixture
             'verified' => 0,
             'token' => 'this.is.a.token',
             'created' => '2015-09-29 05:33:25',
-            'modified' => '2015-09-29 05:33:25'
+            'modified' => '2015-09-29 05:33:25',
+            'deleted' => null,
         ],
     ];
 }
