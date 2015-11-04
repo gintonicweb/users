@@ -42,7 +42,6 @@ class UsersController extends AppController
             $user = $this->Users->newEntity()->accessible('password', true);
             $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
-
                 $this->Auth->setUser($user->toArray());
                 //$this->getMailer('Users.User')->send('signup', [$user]);
                 $event = new Event('Users.afterSignup', $user);
