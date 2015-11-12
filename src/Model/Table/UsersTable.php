@@ -113,4 +113,32 @@ class UsersTable extends Table
         ]);
         return $search;
     }
+
+    /**
+     * Allows to search users by partial username
+     * @return \Search\Manager
+     */
+    public function findRole(Query $query, array $options)
+    {
+        if (!class_exists('\Acl\Model\Table\ArosTable')) {
+            return $query;
+        }
+        $this->hasOne('Aros', [
+            'foreignKey' => 'foreign_key',
+            'conditions' => ['model' => 'Users'],
+        ]);
+        return $query->join([
+            'aros' => [
+                'table' => 'aros',
+                'type' => 'LEFT',
+                'conditions' => 'aros.foreign_key = Users.id',
+            ],
+            'role' => [
+                'table' => 'aros',
+                'type' => 'LEFT',
+                'conditions' => 'aros.parent_id = role.id',
+            ]
+        ])
+        ->select(['role.alias']);
+    }
 }
