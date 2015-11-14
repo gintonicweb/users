@@ -4,7 +4,6 @@ namespace Users\Controller;
 use App\Controller\AppController;
 use Cake\Collection\Collection;
 use Cake\Event\Event;
-use Cake\Mailer\MailerAwareTrait;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Utility\Security;
 use JWT;
@@ -18,8 +17,6 @@ use JWT;
  */
 class UsersController extends AppController
 {
-    use MailerAwareTrait;
-
     /**
      * Setting up the cookie
      *
@@ -43,10 +40,8 @@ class UsersController extends AppController
             $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Auth->setUser($user->toArray());
-                //$this->getMailer('Users.User')->send('signup', [$user]);
                 $event = new Event('Users.afterSignup', $user);
                 $this->eventManager()->dispatch($event);
-
                 $this->Flash->set(__('Please check your e-mail to validate your account'));
             } else {
                 $this->Flash->error(__('An error occured while creating the account'));
@@ -198,8 +193,10 @@ class UsersController extends AppController
             throw new NotFoundException('User could not be found');
         }
         $user->dirty('token', true);
-        if ($this->Users->save($user)) {
-           //$this->getMailer('User')->send('verification', [$user]);
+        $user = $this->Users->save($user);
+        if ($user) {
+            $event = new Event('Users.sendVerification', $user);
+            $this->eventManager()->dispatch($event);
         }
     }
 
@@ -214,8 +211,12 @@ class UsersController extends AppController
         if ($this->request->is(['post', 'put'])) {
             $user = $this->Users->findByEmail($this->request->data['email'])->first();
             $user->dirty('token', true);
-            if ($user && $this->Users->save($user)) {
-                $this->getMailer('Users.User')->send('recovery', [$user]);
+            if ($user) {
+                $user = $this->Users->save($user);
+                if ($user) {
+                    $event = new Event('Users.sendRecovery', $user);
+                    $this->eventManager()->dispatch($event);
+                }
             }
             $this->Flash->set(__('An email was sent with password recovery instructions.'));
             return $this->redirect($this->Auth->redirectUrl());
