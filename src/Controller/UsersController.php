@@ -40,7 +40,7 @@ class UsersController extends AppController
             $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Auth->setUser($user->toArray());
-                $event = new Event('Users.afterSignup', $user);
+                $event = new Event('Users.afterSignup', $this, ['user' => $user]);
                 $this->eventManager()->dispatch($event);
                 $this->Flash->set(__('Please check your e-mail to validate your account'));
             } else {
@@ -195,7 +195,7 @@ class UsersController extends AppController
         $user->dirty('token', true);
         $user = $this->Users->save($user);
         if ($user) {
-            $event = new Event('Users.sendVerification', $user);
+            $event = new Event('Users.sendVerification', $this, ['user' => $user]);
             $this->eventManager()->dispatch($event);
         }
     }
@@ -214,7 +214,7 @@ class UsersController extends AppController
             if ($user) {
                 $user = $this->Users->save($user);
                 if ($user) {
-                    $event = new Event('Users.sendRecovery', $user);
+                    $event = new Event('Users.sendRecovery', $this, ['user' => $user]);
                     $this->eventManager()->dispatch($event);
                 }
             }
