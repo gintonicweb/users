@@ -23,7 +23,7 @@ class User extends Entity
         'token' => false,
         'password' => false,
     ];
-    protected $_hidden = ['password', 'token', 'token_creation'];
+    protected $_hidden = ['password', 'token'];
 
     /**
      * Take plaintext password and return valid Hash of that password.
