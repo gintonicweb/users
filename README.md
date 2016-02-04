@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/gintonicweb/users.svg)](https://travis-ci.org/gintonicweb/users)
-[![Coverage Status](https://coveralls.io/repos/gintonicweb/users/badge.svg?branch=master&service=github)](https://coveralls.io/github/gintonicweb/users?branch=master)
+[![codecov.io](https://codecov.io/github/gintonicweb/users/coverage.svg?branch=master)](https://codecov.io/github/gintonicweb/users?branch=master)
 
 ## Warning
 
