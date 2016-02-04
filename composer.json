@@ -3,7 +3,6 @@
     "description": "Users plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
-        "php": ">=5.4.16",
         "cakephp/cakephp": "~3.0",
         "friendsofcake/authenticate": "dev-cake3",
         "admad/cakephp-jwt-auth": "1.0.*@dev",
@@ -11,7 +10,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "*",
-        "cakephp/cakephp-codesniffer": "2.*"
     },
     "autoload": {
         "psr-4": {
