@@ -9,7 +9,7 @@
         "muffin/trash": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
+        "phpunit/phpunit": "*"
     },
     "autoload": {
         "psr-4": {
