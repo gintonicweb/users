@@ -9,7 +9,6 @@ Router::scope('/', ['plugin' => 'Users'], function ($routes) {
     $routes->connect('/signup', ['controller' => 'Users', 'action' => 'signup']);
     $routes->connect('/users', ['controller' => 'Users']);
     $routes->connect('/users/:action/*', ['controller' => 'Users'], ['routeClass' => 'DashedRoute']);
-    $routes->fallbacks('DashedRoute');
 
     $routes->prefix('api', function ($routes) {
         $routes->extensions(['json','xml']);
@@ -17,7 +16,6 @@ Router::scope('/', ['plugin' => 'Users'], function ($routes) {
         $routes->connect('/users/register', ['controller' => 'Users', 'action' => 'add']);
         $routes->connect('/users/:action/*', ['controller' => 'Users']);
         $routes->resources('Users.Users');
-        $routes->fallbacks('DashedRoute');
     });
 
 });
