@@ -6,7 +6,8 @@
         "cakephp/cakephp": "~3.0",
         "friendsofcake/authenticate": "dev-cake3",
         "admad/cakephp-jwt-auth": "1.0.*@dev",
-        "muffin/trash": "dev-master"
+        "muffin/trash": "dev-master",
+        "friendsofcake/crud-users": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "*"

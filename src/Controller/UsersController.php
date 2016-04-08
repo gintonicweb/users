@@ -14,6 +14,9 @@ use JWT;
  * Handle the mechanics of logging users in, password management and
  * authentication. This base class is intended to stay as lean as possible while
  * being easily reusable from any application.
+ *
+ * @property \Crud\Controller\Component\CrudComponent Crud
+ * @property \Users\Model\Table\UsersTable Users
  */
 class UsersController extends AppController
 {
@@ -28,54 +31,52 @@ class UsersController extends AppController
         $this->loadComponent('Cookie');
     }
 
-    /**
-     * Users registration
-     *
-     * @return void|\Cake\Network\Response
-     */
-    public function signup()
+    public function beforeFilter(Event $event)
     {
-        if ($this->request->is(['post', 'put'])) {
-            $user = $this->Users->newEntity()->accessible('password', true);
-            $this->Users->patchEntity($user, $this->request->data);
-            if ($this->Users->save($user)) {
-                $this->Auth->setUser($user->toArray());
-                $event = new Event('Users.afterSignup', $this, ['user' => $user]);
-                $this->eventManager()->dispatch($event);
-                $this->Flash->set(__('Please check your e-mail to validate your account'));
-            } else {
-                $this->Flash->error(__('An error occured while creating the account'));
-            }
-            return $this->redirect($this->Auth->redirectUrl());
-        }
+        parent::beforeFilter($event);
+        $this->Crud->mapAction('signup', [
+            'className' => 'CrudUsers.register',
+            'view' => 'Users.signup',
+            'saveOptions' => [
+                'fieldList' => [
+                    'username',
+                    'email',
+                    'password'
+                ]
+            ],
+            'messages' => [
+                'success' => [
+                    'text' => __('Please check your e-mail to validate your account')
+                ],
+                'error' => [
+                    'text' => __('An error occurred while creating the account')
+                ]
+            ],
+        ]);
+
+        $this->Crud->mapAction('signin', [
+            'className' => 'CrudUsers.login',
+            'view' => 'Users.signin',
+            'messages' => [
+                'success' => [
+                    'text' => __('Login successful. Please validate your email address.')
+                ],
+                'error' => [
+                    'text' => __('Your username or password is incorrect.')
+                ]
+            ],
+        ]);
+
+        $this->Crud->mapAction('signout', [
+            'className' => 'CrudUsers.Logout',
+            'messages' => [
+                'success' => [
+                    'text' => __('You are now signed out.')
+                ],
+            ],
+        ]);
     }
 
-    /**
-     * Authenticate users
-     *
-     * @return void|\Cake\Network\Response
-     */
-    public function signin()
-    {
-        if ($this->request->is(['post', 'put'])) {
-            $user = $this->Auth->identify();
-            if ($user) {
-                $this->Auth->setUser($user);
-                $this->_setJwt($user['id'], 0);
-                if (isset($this->request->data['remember'])) {
-                    $user['password'] = $this->request->data['password'];
-                    $this->Cookie->write('User', $user);
-                    $this->_setJwt($user['id']);
-                }
-                if (!$user['verified']) {
-                    $this->Flash->set(__('Login successful. Please validate your email address.'));
-                }
-                return $this->redirect($this->Auth->redirectUrl());
-            }
-            $this->Flash->set(__('Your username or password is incorrect.'));
-            return;
-        }
-    }
 
     /**
      * Authenticate users
@@ -100,19 +101,6 @@ class UsersController extends AppController
         $this->Cookie->write('Jwt', JWT::encode($token, Security::salt()));
     }
 
-    /**
-     * Un-authenticate users and remove data from session and cookie
-     *
-     * @return void|\Cake\Network\Response
-     */
-    public function signout()
-    {
-        $this->request->session()->destroy();
-        $this->Cookie->delete('User');
-        $this->Cookie->delete('Jwt');
-        $this->Flash->set(__('You are now signed out.'));
-        return $this->redirect($this->Auth->logout());
-    }
 
     /**
      * Edit method
