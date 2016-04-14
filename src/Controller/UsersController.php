@@ -35,7 +35,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         $this->Crud->mapAction('signup', [
-            'className' => 'CrudUsers.register',
+            'className' => 'CrudUsers.Register',
             'view' => 'Users.signup',
             'saveOptions' => [
                 'fieldList' => [
@@ -55,7 +55,7 @@ class UsersController extends AppController
         ]);
 
         $this->Crud->mapAction('signin', [
-            'className' => 'CrudUsers.login',
+            'className' => 'CrudUsers.Login',
             'view' => 'Users.signin',
             'messages' => [
                 'success' => [

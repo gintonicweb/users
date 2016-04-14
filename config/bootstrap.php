@@ -3,7 +3,7 @@
 use Cake\Core\Plugin;
 
 Plugin::load('CrudUsers');
-Plugin::load('FOD/Authenticate');
+Plugin::load('FOC/Authenticate');
 Plugin::load('ADmad/JwtAuth');
 Plugin::load('Muffin/Trash');
 
