@@ -38,11 +38,7 @@ class UsersController extends AppController
             'className' => 'CrudUsers.Register',
             'view' => 'Users.signup',
             'saveOptions' => [
-                'fieldList' => [
-                    'username',
-                    'email',
-                    'password'
-                ]
+                'fieldList' => ['username', 'email', 'password']
             ],
             'messages' => [
                 'success' => [
@@ -75,32 +71,11 @@ class UsersController extends AppController
                 ],
             ],
         ]);
-    }
 
-
-    /**
-     * Authenticate users
-     *
-     * @param int $userId id of the authentified user
-     * @param string $expires hoq long the Jwt cookie should last
-     * @return void
-     */
-    protected function _setJwt($userId, $expires = null)
-    {
-        if ($expires === null) {
-            $expires = $this->Cookie->configKey('User')['expires'];
-        }
-        $this->Cookie->configKey('Jwt', [
-            'encryption' => false,
-            'expires' => $expires,
+        $this->Crud->mapAction('sendRecovery', [
+            'className' => 'CrudUsers.ForgotPassword',
         ]);
-        $token = [
-            'id' => $userId,
-            'exp' => time() + strtotime($this->Cookie->configKey('User')['expires'])
-        ];
-        $this->Cookie->write('Jwt', JWT::encode($token, Security::salt()));
     }
-
 
     /**
      * Edit method
@@ -118,7 +93,8 @@ class UsersController extends AppController
             
         $user->accessible('password', true);
         if ($this->request->is(['post', 'put'])) {
-            $this->_update($user);
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            $this->Users->save($user);
         }
         $this->set(compact('user'));
     }
@@ -149,24 +125,6 @@ class UsersController extends AppController
     }
 
     /**
-     * Anytime a user needs to be saved
-     *
-     * @param \Users\Model\Entity\User $user user entity
-     * @return void|\Cake\Network\Response
-     */
-    protected function _update($user)
-    {
-        $user = $this->Users->patchEntity($user, $this->request->data);
-        if ($this->Users->save($user)) {
-            $this->Auth->setUser($user->toArray());
-            $this->Flash->set(__('Password has been updated successfully.'));
-            return $this->redirect($this->Auth->redirectUrl());
-        } else {
-            $this->Flash->set(__('Error while resetting password'));
-        }
-    }
-
-    /**
      * If a user hasn't verified his email and has lost the initial verification
      * mail he can request a new verification mail by visiting this action
      *
@@ -185,29 +143,6 @@ class UsersController extends AppController
         if ($user) {
             $event = new Event('Users.sendVerification', $this, ['user' => $user]);
             $this->eventManager()->dispatch($event);
-        }
-    }
-
-    /**
-     * Allows users to request an e-mail for password recovery token and
-     * instructions
-     *
-     * @return void|\Cake\Network\Response
-     */
-    public function sendRecovery()
-    {
-        if ($this->request->is(['post', 'put'])) {
-            $user = $this->Users->findByEmail($this->request->data['email'])->first();
-            $user->dirty('token', true);
-            if ($user) {
-                $user = $this->Users->save($user);
-                if ($user) {
-                    $event = new Event('Users.sendRecovery', $this, ['user' => $user]);
-                    $this->eventManager()->dispatch($event);
-                }
-            }
-            $this->Flash->set(__('An email was sent with password recovery instructions.'));
-            return $this->redirect($this->Auth->redirectUrl());
         }
     }
 }
