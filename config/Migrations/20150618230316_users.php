@@ -27,11 +27,6 @@ class Users extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
-            ->addColumn('token', 'string', [
-                'default' => 0,
-                'limit' => 32,
-                'null' => false,
-            ])
             ->addColumn('created', 'datetime', [
                 'default' => null,
                 'limit' => null,
