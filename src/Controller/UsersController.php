@@ -75,6 +75,7 @@ class UsersController extends AppController
         $this->Crud->mapAction('sendRecovery', [
             'className' => 'CrudUsers.ForgotPassword',
         ]);
+
         $this->Crud->mapAction('changePassword', [
             'className' => 'CrudUsers.ChangePassword',
         ]);
@@ -100,52 +101,5 @@ class UsersController extends AppController
             $this->Users->save($user);
         }
         $this->set(compact('user'));
-    }
-
-    /**
-     * Verify that an email address truly belongs to a given user. Users end
-     * up here by following a link they get via email.
-     *
-     * @param int $id The user id being verified
-     * @param string $token A secret token sent in the link
-     * @return void|\Cake\Network\Response
-     */
-    public function verify($id, $token)
-    {
-        $user = $this->Users->find()
-            ->where(['id' => $id, 'token' => $token])
-            ->first();
-
-        if (!$user) {
-            throw new NotFoundException(__('Error while validating email'));
-        }
-
-        $user->verified = true;
-        $this->Users->save($user);
-        $this->Auth->setUser($user->toArray());
-        $this->Flash->set(__('Email address validated successfuly'));
-        return $this->redirect($this->Auth->redirectUrl());
-    }
-
-    /**
-     * If a user hasn't verified his email and has lost the initial verification
-     * mail he can request a new verification mail by visiting this action
-     *
-     * @return void
-     */
-    public function sendVerification()
-    {
-        $this->render(false);
-        $id = $this->Auth->user('id');
-        $user = $this->Users->find()->where(['id' => $id])->first();
-        if (!$user) {
-            throw new NotFoundException('User could not be found');
-        }
-        $user->dirty('token', true);
-        $user = $this->Users->save($user);
-        if ($user) {
-            $event = new Event('Users.sendVerification', $this, ['user' => $user]);
-            $this->eventManager()->dispatch($event);
-        }
     }
 }

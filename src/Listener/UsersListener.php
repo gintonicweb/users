@@ -24,13 +24,17 @@ class UsersListener extends BaseListener
             'Crud.afterLogout' => 'logout',
             'Crud.afterForgotPassword' => 'createToken',
             'Crud.beforeSave' => 'beforeSave',
+            'Crud.beforeVerify' => 'beforeVerify',
         ];
     }
 
     public function register(Event $event)
     {
-        $event->subject->user = $event->subject->entity->toArray();
-        $this->login($event);
+        if ($event->subject->success) {
+            $this->_setUser($event->subject->entity->toArray());
+            $this->_setJwt($event->subject->entity->id);
+            $this->createToken($event);
+        }
     }
 
     public function login(Event $event)
@@ -49,9 +53,8 @@ class UsersListener extends BaseListener
 
     public function createToken(Event $event)
     {
-        $event->subject->entity->dirty('token', true);
         $table = TableRegistry::get($this->_controller()->modelClass);
-        $table->save($event->subject->entity);
+        $table->tokenize($event->subject->entity->id);
     }
 
     public function beforeSave(Event $event)
@@ -62,13 +65,25 @@ class UsersListener extends BaseListener
         }
     }
 
-    protected function _setUser($entity)
+    public function beforeVerify(Event $event)
+    {
+        $table = TableRegistry::get($this->_controller()->modelClass);
+        $token = $this->_controller->request->query['token'];
+        $event->subject->query = $event->subject->query
+            ->matching('Tokens', function ($q) use ($token){
+                return $q->where(['Tokens.token' => $token]);
+            });
+
+        return TableRegistry::get('Muffin/Tokenize.Tokens')->verify($token);
+    }
+
+    protected function _setUser(array $user)
     {
         if (isset($this->_controller()->request->data['remember'])) {
-            $entity['password'] = $this->_controller()->request->data['password'];
-            $this->_controller()->Cookie->write('RememberMe', $entity);
+            $user['password'] = $this->_controller()->request->data['password'];
+            $this->_controller()->Cookie->write('RememberMe', $user);
         }
-        $this->_controller()->Auth->setUser($entity);
+        $this->_controller()->Auth->setUser($user);
     }
 
     protected function _setJwt($userId)

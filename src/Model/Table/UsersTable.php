@@ -37,10 +37,13 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Muffin/Trash.Trash');
+        $this->addBehavior('Muffin/Tokenize.Tokenize');
+
         if (Plugin::loaded('Search')) {
             $this->addBehavior('Search.Search');
         }
     }
+
 
     /**
      * Default validation rules.
@@ -78,25 +81,6 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['email']));
         $rules->add($rules->isUnique(['username']));
         return $rules;
-    }
-
-    /**
-     * Creates a new token if it is marked as empty and use email as the
-     * username if username is blank
-     *
-     * @param \Cake\Event\Event $event Event instance
-     * @param \Users\Model\Entity\User $entity User being saved
-     * @param ArrayObject $options option
-     * @return void
-     */
-    public function beforeSave(Event $event, User $entity, ArrayObject $options)
-    {
-        $uuid = md5(uniqid(rand(), true));
-        $entity->token = $entity->dirty('token') ? $uuid : false;
-
-        if (empty($entity->username)) {
-            $entity->username = $entity->email;
-        }
     }
 
     /**

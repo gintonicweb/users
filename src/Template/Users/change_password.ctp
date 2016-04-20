@@ -6,7 +6,7 @@
     </ul>
 </div>
 <div class="users form large-10 medium-9 columns">
-    <?= $this->Form->create($$viewVar) ?>
+    <?= $this->Form->create() ?>
     <fieldset>
         <legend><?= __('Recover Password') ?></legend>
         <?= $this->Form->input('password') ?>
