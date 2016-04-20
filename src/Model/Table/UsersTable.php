@@ -56,7 +56,7 @@ class UsersTable extends Table
 
         $validator
             ->add('email', 'valid', ['rule' => 'email'])
-            ->requirePresence('email')
+            ->requirePresence('email', 'create')
             ->notEmpty('email');
 
         $validator

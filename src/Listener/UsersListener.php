@@ -23,6 +23,7 @@ class UsersListener extends BaseListener
             'Crud.afterLogin' => 'login',
             'Crud.afterLogout' => 'logout',
             'Crud.afterForgotPassword' => 'createToken',
+            'Crud.beforeSave' => 'beforeSave',
         ];
     }
 
@@ -51,6 +52,14 @@ class UsersListener extends BaseListener
         $event->subject->entity->dirty('token', true);
         $table = TableRegistry::get($this->_controller()->modelClass);
         $table->save($event->subject->entity);
+    }
+
+    public function beforeSave(Event $event)
+    {
+        if (isset($this->_controller()->request->data['password'])) {
+            $password = $this->_controller()->request->data['password'];
+            $event->subject->entity['password'] = $password;
+        }
     }
 
     protected function _setUser($entity)

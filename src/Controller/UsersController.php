@@ -75,6 +75,9 @@ class UsersController extends AppController
         $this->Crud->mapAction('sendRecovery', [
             'className' => 'CrudUsers.ForgotPassword',
         ]);
+        $this->Crud->mapAction('changePassword', [
+            'className' => 'CrudUsers.ChangePassword',
+        ]);
     }
 
     /**
