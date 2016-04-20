@@ -8,7 +8,7 @@
         "admad/cakephp-jwt-auth": "1.0.*@dev",
         "muffin/trash": "dev-master",
         "friendsofcake/crud-users": "dev-master",
-        "muffin/tokenize:1.0.x-dev"
+        "muffin/tokenize": "1.0.x-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
