@@ -7,7 +7,11 @@ Do not use, work in progress
 
 # Users plugin for CakePHP
 
-Based on `friendsofcake/authorize`. Support for signup, sigin, signout, register, password recovery and email verification, cookie and token authentication.
+Fully featured users plugin based on:  
+- admad/jwt-authenticate
+- foc/crud-users
+- muffin/tokenize
+- muffin/trash
 
 ## Install instructions
 
@@ -28,35 +32,5 @@ Plugin::load('Users', ['routes' => true, 'bootstrap' => 'true']);
 
 Add the following auth config to your AppController
 ```
-$this->loadComponent('Auth', [
-    'authenticate' => [
-        AuthComponent::ALL => [
-            'fields' => [
-                'username' => 'email',
-                'password' => 'password'
-            ],
-            'userModel' => 'Users.Users',
-        ],
-        'FOC/Authenticate.Cookie',
-        'FOC/Authenticate.MultiColumn' => [
-            'columns' => ['email'],
-        ]
-    ],
-    'loginAction' => [
-        'controller' => 'Users',
-        'action' => 'signin',
-        'plugin' => 'Users',
-        'prefix' => false
-    ],
-]);
-```
-
-Allow the desired actions to your AppController
-```
-public function beforeFilter(Event $event)
-{
-    if ($this->request->params['controller'] == 'Pages') {
-        $this->Auth->allow(['signup', 'signin', 'verify', 'sendRecovery']);
-    }
-}
+todo
 ```
