@@ -5,7 +5,6 @@
     "require": {
         "cakephp/cakephp": "~3.0",
         "admad/cakephp-jwt-auth": "1.0.*@dev",
-        "muffin/trash": "dev-master",
         "friendsofcake/crud-users": "dev-master",
         "muffin/tokenize": "1.0.x-dev",
         "xety/cake3-cookieauth": "1.*"
