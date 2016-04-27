@@ -19,16 +19,30 @@ class UsersListener extends BaseListener
     public function implementedEvents()
     {
         return [
-            'Crud.afterRegister' => 'register',
-            'Crud.afterLogin' => 'login',
-            'Crud.afterLogout' => 'logout',
+            'Crud.beforeFilter' => 'beforeFilter',
+            'Crud.afterRegister' => 'afterRegister',
+            'Crud.afterLogin' => 'afterLogin',
+            'Crud.afterLogout' => 'afterLogout',
             'Crud.afterForgotPassword' => 'createToken',
             'Crud.beforeSave' => 'beforeSave',
             'Crud.beforeVerify' => 'beforeVerify',
         ];
     }
 
-    public function register(Event $event)
+    public function beforeFilter(Event $event)
+    {
+        if (!$this->_controller()->Auth->user() &&
+            $this->_controller()->Cookie->read('CookieAuth')) {
+
+            $user = $this->_controller()->Auth->identify();
+            if ($user) {
+                $this->_controller()->Auth->setUser($user);
+            } else {
+                $this->_controller()->Cookie->delete('CookieAuth');
+            }
+        }
+    }
+    public function afterRegister(Event $event)
     {
         if ($event->subject->success) {
             $this->_setUser($event->subject->entity->toArray());
@@ -37,7 +51,7 @@ class UsersListener extends BaseListener
         }
     }
 
-    public function login(Event $event)
+    public function afterLogin(Event $event)
     {
         if ($event->subject->success) {
             $this->_setUser($event->subject->user);
@@ -45,10 +59,10 @@ class UsersListener extends BaseListener
         }
     }
 
-    public function logout(Event $event)
+    public function afterLogout(Event $event)
     {
         $this->_controller()->Cookie->delete('Jwt');
-        $this->_controller()->Cookie->delete('RememberMe');
+        $this->_controller()->Cookie->delete('CookieAuth');
     }
 
     public function createToken(Event $event)
@@ -81,15 +95,15 @@ class UsersListener extends BaseListener
     {
         if (isset($this->_controller()->request->data['remember'])) {
             $user['password'] = $this->_controller()->request->data['password'];
-            $this->_controller()->Cookie->write('RememberMe', $user);
+            $this->_controller()->Cookie->write('CookieAuth', $user);
         }
         $this->_controller()->Auth->setUser($user);
     }
 
     protected function _setJwt($userId)
     {
-        $cookie = !empty($this->_controller()->Cookie->read('RememberMe'));
-        $expiration = $this->_controller()->Cookie->configKey('RememberMe')['expires'];
+        $cookie = !empty($this->_controller()->Cookie->read('CookieAuth'));
+        $expiration = $this->_controller()->Cookie->configKey('CookieAuth')['expires'];
 
         $this->_controller()->Cookie->configKey('Jwt', [
             'encryption' => false,

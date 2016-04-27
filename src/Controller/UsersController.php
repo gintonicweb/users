@@ -2,11 +2,8 @@
 namespace Users\Controller;
 
 use App\Controller\AppController;
-use Cake\Collection\Collection;
 use Cake\Event\Event;
 use Cake\Network\Exception\NotFoundException;
-use Cake\Utility\Security;
-use JWT;
 
 /**
  * Users Controller

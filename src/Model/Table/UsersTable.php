@@ -97,4 +97,19 @@ class UsersTable extends Table
         ]);
         return $search;
     }
+
+    /**
+     * Multi-column authenticate
+     *
+     * @param \Cake\ORM\Query $query The query to find with
+     * @param array $options The options to find with
+     * @return \Cake\ORM\Query The query builder
+     */
+    public function findAuth($query, $options)
+    {
+        foreach ($options['columns'] as $column) {
+            $query = $query->orWhere([$column => $options['username']]);
+        }
+        return $query;
+    }
 }
