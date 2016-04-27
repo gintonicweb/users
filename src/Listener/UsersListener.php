@@ -5,12 +5,20 @@ namespace Users\Listener;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Crud\Listener\BaseListener;
+use \Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
 use JWT;
 
 class UsersListener extends BaseListener
 {
+
+    use MailerAwareTrait;
+
+    protected $_defaultConfig = [
+        'mailer' => 'Users.User',
+    ];
+
     /**
      * Callbacks definition
      *
@@ -23,10 +31,15 @@ class UsersListener extends BaseListener
             'Crud.afterRegister' => 'afterRegister',
             'Crud.afterLogin' => 'afterLogin',
             'Crud.afterLogout' => 'afterLogout',
-            'Crud.afterForgotPassword' => 'createToken',
+            'Crud.afterForgotPassword' => 'afterForgotPassowrd',
             'Crud.beforeSave' => 'beforeSave',
             'Crud.beforeVerify' => 'beforeVerify',
         ];
+    }
+
+    public function afterForgotPassword(Event $event)
+    {
+        $this->_sendToken($event, 'forgotPassword');
     }
 
     public function beforeFilter(Event $event)
@@ -42,12 +55,13 @@ class UsersListener extends BaseListener
             }
         }
     }
+
     public function afterRegister(Event $event)
     {
         if ($event->subject->success) {
             $this->_setUser($event->subject->entity->toArray());
             $this->_setJwt($event->subject->entity->id);
-            $this->createToken($event);
+            $this->_sendToken($event, 'register');
         }
     }
 
@@ -63,12 +77,6 @@ class UsersListener extends BaseListener
     {
         $this->_controller()->Cookie->delete('Jwt');
         $this->_controller()->Cookie->delete('CookieAuth');
-    }
-
-    public function createToken(Event $event)
-    {
-        $table = TableRegistry::get($this->_controller()->modelClass);
-        $table->tokenize($event->subject->entity->id);
     }
 
     public function beforeSave(Event $event)
@@ -89,6 +97,19 @@ class UsersListener extends BaseListener
             });
 
         return TableRegistry::get('Muffin/Tokenize.Tokens')->verify($token);
+    }
+
+    protected function _sendToken(Event $event, $mailerName)
+    {
+        $table = TableRegistry::get($this->_controller()->modelClass);
+        $token = $table->tokenize($event->subject->entity->id);
+
+        if ($this->config('mailer')) {
+            $test = $this->getMailer($this->config('mailer'))->send($mailerName, [
+                $event->subject->entity->toArray(),
+                $token 
+            ]);
+        }
     }
 
     protected function _setUser(array $user)
