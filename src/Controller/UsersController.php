@@ -76,6 +76,12 @@ class UsersController extends AppController
         $this->Crud->mapAction('changePassword', [
             'className' => 'CrudUsers.ChangePassword',
         ]);
+
+        $this->Crud->mapAction('verify', [
+            'className' => 'CrudUsers.ChangePassword',
+            'editEntity' => false,
+        ]);
+
     }
 
     /**
