@@ -79,10 +79,20 @@ class UsersController extends AppController
 
         $this->Crud->mapAction('verify', [
             'className' => 'CrudUsers.ChangePassword',
-            'editEntity' => false,
+            'postEnabled' => false,
         ]);
 
     }
+
+    public function signup()
+    {
+        $this->Crud->on('beforeRedirect', function(Event $event) {
+            $event->subject->url = $this->Auth->redirectUrl();
+            debug($event->subject->url);
+        });
+        $this->Crud->execute();
+    }
+
 
     /**
      * Edit method

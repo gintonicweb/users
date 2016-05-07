@@ -6,7 +6,7 @@ use Cake\Mailer\Mailer;
 
 class UserMailer extends Mailer
 {
-    public function welcome($user, $token)
+    public function register($user, $token)
     {
         return $this->to($user['email'])
             ->subject('Please confirm your email')
