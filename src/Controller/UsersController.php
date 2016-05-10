@@ -28,6 +28,12 @@ class UsersController extends AppController
         $this->loadComponent('Cookie');
     }
 
+    /**
+     * Before Filter
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return void
+     */
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
@@ -81,12 +87,16 @@ class UsersController extends AppController
             'className' => 'CrudUsers.ChangePassword',
             'postEnabled' => false,
         ]);
-
     }
 
+    /**
+     * Signup
+     *
+     * @return void
+     */
     public function signup()
     {
-        $this->Crud->on('beforeRedirect', function(Event $event) {
+        $this->Crud->on('beforeRedirect', function (Event $event) {
             $event->subject->url = $this->Auth->redirectUrl();
             debug($event->subject->url);
         });

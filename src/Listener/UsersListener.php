@@ -4,10 +4,10 @@ namespace Users\Listener;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Crud\Listener\BaseListener;
-use \Cake\Mailer\MailerAwareTrait;
+use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
+use Crud\Listener\BaseListener;
 use JWT;
 
 class UsersListener extends BaseListener
@@ -37,11 +37,25 @@ class UsersListener extends BaseListener
         ];
     }
 
+    /**
+     * After Forgot Password
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return void
+     */
     public function afterForgotPassword(Event $event)
     {
         $this->_sendToken($event, 'forgotPassword');
     }
 
+    /**
+     * Before Filter
+     *
+     * Set the cookie and authenticate users, or invalidate the cookie.
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return void
+     */
     public function beforeFilter(Event $event)
     {
         if (!$this->_controller()->Auth->user() &&
@@ -56,6 +70,12 @@ class UsersListener extends BaseListener
         }
     }
 
+    /**
+     * After Register
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return void
+     */
     public function afterRegister(Event $event)
     {
         if ($event->subject->success) {
@@ -65,6 +85,12 @@ class UsersListener extends BaseListener
         }
     }
 
+    /**
+     * After Login
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return void
+     */
     public function afterLogin(Event $event)
     {
         if ($event->subject->success) {
@@ -73,12 +99,24 @@ class UsersListener extends BaseListener
         }
     }
 
+    /**
+     * After Logout
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return void
+     */
     public function afterLogout(Event $event)
     {
         $this->_controller()->Cookie->delete('Jwt');
         $this->_controller()->Cookie->delete('CookieAuth');
     }
 
+    /**
+     * Before Save
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return void
+     */
     public function beforeSave(Event $event)
     {
         if (isset($this->_controller()->request->data['password'])) {
@@ -87,18 +125,31 @@ class UsersListener extends BaseListener
         }
     }
 
+    /**
+     * Before Verify
+     *
+     * @param \Cake\Event\Event $event Event
+     * @return bool
+     */
     public function beforeVerify(Event $event)
     {
         $table = TableRegistry::get($this->_controller()->modelClass);
         $token = $this->_controller->request->query['token'];
         $event->subject->query = $event->subject->query
-            ->matching('Tokens', function ($q) use ($token){
+            ->matching('Tokens', function ($q) use ($token) {
                 return $q->where(['Tokens.token' => $token]);
             });
 
         return TableRegistry::get('Muffin/Tokenize.Tokens')->verify($token);
     }
 
+    /**
+     * Send Token
+     *
+     * @param \Cake\Event\Event $event Event
+     * @param string $mailerName Name of the mailer config to use
+     * @return void
+     */
     protected function _sendToken(Event $event, $mailerName)
     {
         $table = TableRegistry::get($this->_controller()->modelClass);
@@ -107,11 +158,17 @@ class UsersListener extends BaseListener
         if ($this->config('mailer')) {
             $test = $this->getMailer($this->config('mailer'))->send($mailerName, [
                 $event->subject->entity->toArray(),
-                $token 
+                $token,
             ]);
         }
     }
 
+    /**
+     * Set User
+     *
+     * @param array $user User details
+     * @return void
+     */
     protected function _setUser(array $user)
     {
         if (isset($this->_controller()->request->data['remember'])) {
@@ -121,6 +178,12 @@ class UsersListener extends BaseListener
         $this->_controller()->Auth->setUser($user);
     }
 
+    /**
+     * Set Jwt token to a cookie
+     *
+     * @param int $userId User id
+     * @return void
+     */
     protected function _setJwt($userId)
     {
         $cookie = !empty($this->_controller()->Cookie->read('CookieAuth'));
