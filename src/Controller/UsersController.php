@@ -98,7 +98,6 @@ class UsersController extends AppController
     {
         $this->Crud->on('beforeRedirect', function (Event $event) {
             $event->subject->url = $this->Auth->redirectUrl();
-            debug($event->subject->url);
         });
         $this->Crud->execute();
     }
