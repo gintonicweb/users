@@ -33,7 +33,7 @@ class UsersListener extends BaseListener
             'Crud.afterLogout' => 'afterLogout',
             'Crud.afterForgotPassword' => 'afterForgotPassowrd',
             'Crud.beforeSave' => 'beforeSave',
-            'Crud.beforeVerify' => 'beforeVerify',
+            'Crud.verifyToken' => 'verifyToken',
         ];
     }
 
@@ -129,18 +129,12 @@ class UsersListener extends BaseListener
      * Before Verify
      *
      * @param \Cake\Event\Event $event Event
-     * @return bool
+     * @return void
      */
-    public function beforeVerify(Event $event)
+    public function verifyToken(Event $event)
     {
-        $table = TableRegistry::get($this->_controller()->modelClass);
-        $token = $this->_controller->request->query['token'];
-        $event->subject->query = $event->subject->query
-            ->matching('Tokens', function ($q) use ($token) {
-                return $q->where(['Tokens.token' => $token]);
-            });
-
-        return TableRegistry::get('Muffin/Tokenize.Tokens')->verify($token);
+        $event->subject->verified = TableRegistry::get('Muffin/Tokenize.Tokens')
+            ->verify($event->subject->token);
     }
 
     /**

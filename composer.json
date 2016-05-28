@@ -2,11 +2,17 @@
     "name": "gintonicweb/users",
     "description": "Users plugin for CakePHP",
     "type": "cakephp-plugin",
+    "repositories": [
+        {
+            "url": "https://github.com/phillaf/crud-users",
+            "type": "vcs"
+        }
+    ],
     "require": {
-        "cakephp/cakephp": "~3.0",
         "admad/cakephp-jwt-auth": "1.0.*@dev",
-        "friendsofcake/crud-users": "^0.1",
+        "cakephp/cakephp": "~3.0",
         "muffin/tokenize": "1.0.x-dev",
+        "friendsofcake/crud-users": "^0.1",
         "xety/cake3-cookieauth": "1.*"
     },
     "require-dev": {
