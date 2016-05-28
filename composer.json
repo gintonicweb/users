@@ -4,15 +4,15 @@
     "type": "cakephp-plugin",
     "repositories": [
         {
-            "url": "https://github.com/phillaf/crud-users",
-            "type": "vcs"
+            "type": "vcs",
+            "url": "https://github.com/phillaf/crud-users"
         }
     ],
     "require": {
         "admad/cakephp-jwt-auth": "1.0.*@dev",
         "cakephp/cakephp": "~3.0",
         "muffin/tokenize": "1.0.x-dev",
-        "friendsofcake/crud-users": "^0.1",
+        "friendsofcake/crud-users": "dev-master",
         "xety/cake3-cookieauth": "1.*"
     },
     "require-dev": {
