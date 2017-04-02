@@ -3,7 +3,7 @@
 
 ## Warning
 
-Do not use, work in progress
+This package is not maintained
 
 # Users plugin for CakePHP
 
